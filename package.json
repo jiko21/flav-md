@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint -c .eslintrc.json --fix src/**/*",
-    "test": "jest --config jest.config.json"
+    "test": "jest --config jest.config.json --coverage"
   },
   "keywords": [
     "markdown",
