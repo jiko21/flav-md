@@ -8,3 +8,7 @@ const _readFile = (filename: string): string => {
 export const _readMdFromFile = (filename: string): string => {
   return _readFile(filename);
 };
+
+export const _readCssFromFile = (filename: string): string => {
+  return _readFile(filename);
+};
