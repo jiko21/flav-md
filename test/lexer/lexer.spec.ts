@@ -24,11 +24,13 @@ describe('Lexer.class', () => {
       },
       {
         tag: 'p' as Token,
-        content: 'this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
+        content:
+          'this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
       },
       {
         tag: 'p' as Token,
-        content: '画像 <img src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル">',
+        content:
+          '画像 <img class="flav-md-img" src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル">',
       },
     ];
     const rslt = new MdNode(rsltNodes);
