@@ -71,9 +71,9 @@ export class Lexer {
    */
   private _inlineParse(input: string): string {
     const _imagePattern = /!\[(.+)\]\((.+)\)/;
-    const _imageTemplate = `<img src="$2" alt="$1">`;
+    const _imageTemplate = `<img class="flav-md-img" src="$2" alt="$1">`;
     const _linkPattern = /\[(.+)\]\((.+)\)/;
-    const _linkTemplate = `<a href="$2" alt="$1">$1</a>`;
+    const _linkTemplate = `<a class="flav-md-a" href="$2" alt="$1">$1</a>`;
     const _input = input;
     return _input.replace(_imagePattern, _imageTemplate).replace(_linkPattern, _linkTemplate);
   }

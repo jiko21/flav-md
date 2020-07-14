@@ -25,10 +25,10 @@ describe('Lexer.class', () => {
     mdNode = new MdNode(text);
   });
   it('should correctly parse file', () => {
-    const expected = `<h1>hello</h1>
-<h2>world</h2>
-<p>this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a></p>
-<p>画像 <img src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル"></p>`;
+    const expected = `<h1 class="flav-md-text flav-md-h1 flav-md-h">hello</h1>
+<h2 class="flav-md-text flav-md-h2 flav-md-h">world</h2>
+<p class="flav-md-text flav-md-p">this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a></p>
+<p class="flav-md-text flav-md-p">画像 <img src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル"></p>`;
     const actual = mdNode.toHtmlString();
     expect(expected).toEqual(actual);
   });
