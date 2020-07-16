@@ -16,18 +16,20 @@ export default class FlavMd {
    * read md file
    * @param {string} mdFilePath file path for markdown
    */
-  readMd(mdFilePath: string): void {
+  readMd(mdFilePath: string): FlavMd {
     const mdText = _readMdFromFile(mdFilePath);
     const lexer = new Lexer(mdText.split('\n'));
     this.htmlText = lexer.parse().toHtmlString();
+    return this;
   }
 
   /**
    * read md file
    * @param {string} mdFilePath file path for markdown
    */
-  readCss(cssFilePath: string): void {
+  readCss(cssFilePath: string): FlavMd {
     this.cssText = _readCssFromFile(cssFilePath);
+    return this;
   }
 
   /**
