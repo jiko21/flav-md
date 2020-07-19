@@ -1,5 +1,5 @@
 import { MdNode } from './builder';
-export type Token = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p';
+export type Token = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'ul' | 'li';
 
 namespace Token {
   /**
@@ -15,12 +15,14 @@ namespace Token {
 
 export type ElementNode = {
   tag: Token;
-  content: string;
+  content: string | ElementNode | ElementNode[];
 };
 
 export const _createLexer = (input: string[]): Lexer => {
   return new Lexer(input);
 };
+
+const simpleListPattern = /^([\s\s]*)[\*|-]\s(.+)/;
 
 /** Class representing a lexer. */
 export class Lexer {
@@ -37,6 +39,17 @@ export class Lexer {
   parse(): MdNode {
     const rsltStr = [] as ElementNode[];
     for (let i = 0; i < this.text.length; i++) {
+      const _listIndex = i;
+      while (this._isList(this.text[i])) i++;
+
+      if (_listIndex !== i) {
+        const parseResult = this._parseSimpleList(this.text.slice(_listIndex, i));
+        rsltStr.push(parseResult);
+        i--;
+        continue;
+      }
+
+      // normal text <h\d> or <p>
       rsltStr.push(this._parseLine(this.text[i]));
     }
     return new MdNode(rsltStr);
@@ -63,6 +76,56 @@ export class Lexer {
     };
   }
 
+  /**
+   * check whether input is list
+   * @param {string} input string
+   * @return {boolean} whether input is list
+   */
+  private _isList(input: string): boolean {
+    return simpleListPattern.test(input);
+  }
+
+  /**
+   * parse list to ElementNode
+   * @param {string} input input lists
+   * @param {number} nowIndent indent length
+   * @return {ElementNode | ElementNode[]} results
+   */
+  private _parseSimpleList(input: string[], nowIndent: number = 0): ElementNode {
+    const resultsNode: ElementNode = {
+      tag: 'ul',
+      content: [] as ElementNode[],
+    };
+    for (let i = 0; i < input.length; i++) {
+      const [indentLine, content] = (input[i].match(simpleListPattern) as string[]).splice(1, 2);
+      const indentLength = indentLine.length;
+      if (indentLength > nowIndent) {
+        const startIdnex = i;
+        while (true) {
+          i++;
+          if (i >= input.length) break;
+          const _indentLength = (input[i].match(simpleListPattern) as string[])[1].length;
+          if (_indentLength < indentLength) {
+            break;
+          }
+        }
+
+        const parseResult = this._parseSimpleList(input.slice(startIdnex, i), indentLength);
+        (resultsNode.content as ElementNode[]).push({
+          tag: 'li',
+          content: parseResult,
+        });
+        i--;
+        continue;
+      }
+
+      (resultsNode.content as ElementNode[]).push({
+        tag: 'li',
+        content: this._inlineParse(content),
+      });
+    }
+    return resultsNode;
+  }
   /**
    * parse one line string and replace link and img
    * @private
