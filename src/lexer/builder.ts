@@ -1,4 +1,4 @@
-import { ElementNode, Token } from './lexer';
+import { ElementNode, Token, isElementNode } from './lexer';
 
 /** Class representing a MdNode. */
 export class MdNode {
@@ -23,11 +23,38 @@ export class MdNode {
   /**
    * parse elementNode to html tag and child
    * @param {ElementNode} item input node
+   * @param {number} indent indent size
    * @return {string} html string
    */
-  private createTag(item: ElementNode): string {
-    const classes = this.generateClassForTheTag(item.tag);
-    return `<${item.tag} class="${classes.join(' ')}">${item.content}</${item.tag}>`;
+  private createTag(item: ElementNode, indent: number = 0): string {
+    if (item.tag === 'ul') {
+      return `<ul>\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
+        indent,
+      )}</ul>`;
+    } else if (item.tag === 'li') {
+      if (isElementNode(item.content)) {
+        return ' '.repeat(indent) + `<li>${this.createTag(item.content, indent)}</li>`;
+      } else {
+        return ' '.repeat(indent) + `<li>${item.content}</li>`;
+      }
+    } else {
+      const classes = this.generateClassForTheTag(item.tag);
+      return `<${item.tag} class="${classes.join(' ')}">${item.content}</${item.tag}>`;
+    }
+  }
+
+  /**
+   * parse elementNode to html tag and child
+   * @param {ElementNode[]} items input node
+   * @param {number} indent indent size
+   * @return {string} html string
+   */
+  private parseNestedTag(items: ElementNode[], indent: number = 0): string {
+    let results = '';
+    items.forEach((item) => {
+      results += `${this.createTag(item, indent)}\n`;
+    });
+    return results;
   }
 
   /**
