@@ -18,6 +18,15 @@ export type ElementNode = {
   content: string | ElementNode | ElementNode[];
 };
 
+/**
+ * check whether arg is ElemetNode
+ * @param {any} arg argument
+ * @return {boolean} result
+ */
+export const isElementNode = (arg: any): arg is ElementNode => {
+  return arg.tag !== undefined && arg.content !== undefined;
+};
+
 export const _createLexer = (input: string[]): Lexer => {
   return new Lexer(input);
 };

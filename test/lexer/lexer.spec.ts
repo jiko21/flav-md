@@ -28,7 +28,6 @@ describe('Lexer.class', () => {
         tag: 'h2' as Token,
         content: 'world',
       },
-
       {
         tag: 'ul' as Token,
         content: [
