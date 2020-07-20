@@ -1,5 +1,5 @@
 import { MdNode } from './builder';
-export type Token = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'ul' | 'li';
+export type Token = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'ul' | 'ol' | 'li';
 
 namespace Token {
   /**
@@ -32,6 +32,7 @@ export const _createLexer = (input: string[]): Lexer => {
 };
 
 const simpleListPattern = /^([\s\s]*)[\*|-]\s(.+)/;
+const numberListPattern = /^([\s\s]*)\d+\.\s(.+)/;
 
 /** Class representing a lexer. */
 export class Lexer {
@@ -49,15 +50,25 @@ export class Lexer {
     const rsltStr = [] as ElementNode[];
     for (let i = 0; i < this.text.length; i++) {
       const _listIndex = i;
-      while (this._isList(this.text[i])) i++;
+      if (this._isList(this.text[i])) {
+        while (this._isList(this.text[i])) i++;
 
-      if (_listIndex !== i) {
-        const parseResult = this._parseSimpleList(this.text.slice(_listIndex, i));
-        rsltStr.push(parseResult);
-        i--;
-        continue;
+        if (_listIndex !== i) {
+          const parseResult = this._parseList(this.text.slice(_listIndex, i), simpleListPattern);
+          rsltStr.push(parseResult);
+          i--;
+          continue;
+        }
+      } else if (this._isNumberList(this.text[i])) {
+        while (this._isNumberList(this.text[i])) i++;
+
+        if (_listIndex !== i) {
+          const parseResult = this._parseList(this.text.slice(_listIndex, i), numberListPattern);
+          rsltStr.push(parseResult);
+          i--;
+          continue;
+        }
       }
-
       // normal text <h\d> or <p>
       rsltStr.push(this._parseLine(this.text[i]));
     }
@@ -95,31 +106,41 @@ export class Lexer {
   }
 
   /**
+   * check whether input is number list
+   * @param {string} input string
+   * @return {boolean} whether input is list
+   */
+  private _isNumberList(input: string): boolean {
+    return numberListPattern.test(input);
+  }
+
+  /**
    * parse list to ElementNode
    * @param {string} input input lists
+   * @param {RegExp} pattern parse pattern
    * @param {number} nowIndent indent length
    * @return {ElementNode | ElementNode[]} results
    */
-  private _parseSimpleList(input: string[], nowIndent: number = 0): ElementNode {
+  private _parseList(input: string[], pattern: RegExp, nowIndent: number = 0): ElementNode {
     const resultsNode: ElementNode = {
-      tag: 'ul',
+      tag: pattern === simpleListPattern ? 'ul' : 'ol',
       content: [] as ElementNode[],
     };
     for (let i = 0; i < input.length; i++) {
-      const [indentLine, content] = (input[i].match(simpleListPattern) as string[]).splice(1, 2);
+      const [indentLine, content] = (input[i].match(pattern) as string[]).splice(1, 2);
       const indentLength = indentLine.length;
       if (indentLength > nowIndent) {
         const startIdnex = i;
         while (true) {
           i++;
           if (i >= input.length) break;
-          const _indentLength = (input[i].match(simpleListPattern) as string[])[1].length;
+          const _indentLength = (input[i].match(pattern) as string[])[1].length;
           if (_indentLength < indentLength) {
             break;
           }
         }
 
-        const parseResult = this._parseSimpleList(input.slice(startIdnex, i), indentLength);
+        const parseResult = this._parseList(input.slice(startIdnex, i), pattern, indentLength);
         (resultsNode.content as ElementNode[]).push({
           tag: 'li',
           content: parseResult,
