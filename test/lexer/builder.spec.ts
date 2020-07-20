@@ -58,6 +58,47 @@ describe('Lexer.class', () => {
       ],
     },
     {
+      tag: 'ol',
+      content: [
+        {
+          tag: 'li',
+          content: 'hoge1',
+        },
+        {
+          tag: 'li',
+          content: 'hoge2',
+        },
+        {
+          tag: 'li',
+          content: {
+            tag: 'ol',
+            content: [
+              {
+                tag: 'li',
+                content: 'aaa',
+              },
+              {
+                tag: 'li',
+                content: 'ccc',
+              },
+              {
+                tag: 'li',
+                content: {
+                  tag: 'ol',
+                  content: [
+                    {
+                      tag: 'li',
+                      content: 'ddd',
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+    {
       tag: 'p' as Token,
       content: 'this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
     },
@@ -85,6 +126,17 @@ describe('Lexer.class', () => {
   </ul></li>
   <li>hogehoge4</li>
 </ul>
+<ol>
+  <li>hoge1</li>
+  <li>hoge2</li>
+  <li><ol>
+    <li>aaa</li>
+    <li>ccc</li>
+    <li><ol>
+      <li>ddd</li>
+    </ol></li>
+  </ol></li>
+</ol>
 <p class="flav-md-text flav-md-p">this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a></p>
 <p class="flav-md-text flav-md-p">画像 <img src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル"></p>`;
     const actual = mdNode.toHtmlString();

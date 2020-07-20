@@ -31,6 +31,10 @@ export class MdNode {
       return `<ul>\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
         indent,
       )}</ul>`;
+    } else if (item.tag === 'ol') {
+      return `<ol>\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
+        indent,
+      )}</ol>`;
     } else if (item.tag === 'li') {
       if (isElementNode(item.content)) {
         return ' '.repeat(indent) + `<li>${this.createTag(item.content, indent)}</li>`;
