@@ -41,9 +41,19 @@ export class MdNode {
       } else {
         return ' '.repeat(indent) + `<li>${item.content}</li>`;
       }
+    } else if (item.tag === 'blockquote') {
+      const classes = this.generateClassForTheTag(item.tag);
+      return `${' '.repeat(indent)}<blockquote class="${classes.join(' ')}">\n${this.parseNestedTag(
+        item.content as ElementNode[],
+        indent + 2,
+      )}${' '.repeat(indent)}</blockquote>`;
+    } else if (item.tag === 'code') {
+      return `<code class="flav-md-code">\n  ${item.content}\n</code>`;
     } else {
       const classes = this.generateClassForTheTag(item.tag);
-      return `<${item.tag} class="${classes.join(' ')}">${item.content}</${item.tag}>`;
+      return `${' '.repeat(indent)}<${item.tag} class="${classes.join(' ')}">${item.content}</${
+        item.tag
+      }>`;
     }
   }
 
