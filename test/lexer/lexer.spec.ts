@@ -18,6 +18,16 @@ describe('Lexer.class', () => {
     '    1. ddd',
     'this is [Google先生](https://www.google.co.jp/)',
     '画像 ![エビフライトライアングル](http://i.imgur.com/Jjwsc.jpg)',
+    '> aaa',
+    'bbb',
+    '>> ccc',
+    'ddd',
+    '',
+    '## world',
+    '```',
+    '<script src="hoge.js"></script>',
+    '<script src="hoge.js"></script>',
+    '```',
   ];
   let lexer: Lexer;
   beforeAll(() => {
@@ -129,6 +139,41 @@ describe('Lexer.class', () => {
         tag: 'p' as Token,
         content:
           '画像 <img class="flav-md-img" src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル">',
+      },
+      {
+        tag: 'blockquote',
+        content: [
+          {
+            tag: 'p',
+            content: 'aaa',
+          },
+          {
+            tag: 'p',
+            content: 'bbb',
+          },
+          {
+            tag: 'blockquote',
+            content: [
+              {
+                tag: 'p',
+                content: 'ccc',
+              },
+              {
+                tag: 'p',
+                content: 'ddd',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        tag: 'h2' as Token,
+        content: 'world',
+      },
+      {
+        tag: 'code',
+        content:
+          '&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;<br />&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;',
       },
     ];
     const expected = new MdNode(rsltNodes);

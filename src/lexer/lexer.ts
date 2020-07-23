@@ -1,5 +1,18 @@
 import { MdNode } from './builder';
-export type Token = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'ul' | 'ol' | 'li';
+import { _escapeCodeString } from '../util/string-util';
+export type Token =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'p'
+  | 'ul'
+  | 'ol'
+  | 'li'
+  | 'blockquote'
+  | 'code';
 
 namespace Token {
   /**
@@ -33,6 +46,8 @@ export const _createLexer = (input: string[]): Lexer => {
 
 const simpleListPattern = /^([\s\s]*)[\*|-]\s(.+)/;
 const numberListPattern = /^([\s\s]*)\d+\.\s(.+)/;
+const quotePattern = /^>\s*([\s\>]*.+)/;
+const codeBlockParenPattern = /^```$/;
 
 /** Class representing a lexer. */
 export class Lexer {
@@ -47,32 +62,60 @@ export class Lexer {
    * @return {MdNode} output value
    */
   parse(): MdNode {
+    const rsltStr = this._parse(this.text);
+    return new MdNode(rsltStr);
+  }
+
+  /**
+   * parse input text and return ElementNode[]
+   * @param {string} input input string array
+   * @return {ElementNode[]} rslt
+   */
+  private _parse(input: string[]): ElementNode[] {
     const rsltStr = [] as ElementNode[];
-    for (let i = 0; i < this.text.length; i++) {
+    for (let i = 0; i < input.length; i++) {
       const _listIndex = i;
-      if (this._isList(this.text[i])) {
-        while (this._isList(this.text[i])) i++;
+      if (this._isList(input[i])) {
+        while (this._isList(input[i])) i++;
 
         if (_listIndex !== i) {
-          const parseResult = this._parseList(this.text.slice(_listIndex, i), simpleListPattern);
+          const parseResult = this._parseList(input.slice(_listIndex, i), simpleListPattern);
           rsltStr.push(parseResult);
           i--;
           continue;
         }
-      } else if (this._isNumberList(this.text[i])) {
-        while (this._isNumberList(this.text[i])) i++;
+      } else if (this._isNumberList(input[i])) {
+        while (this._isNumberList(input[i])) i++;
 
         if (_listIndex !== i) {
-          const parseResult = this._parseList(this.text.slice(_listIndex, i), numberListPattern);
+          const parseResult = this._parseList(input.slice(_listIndex, i), numberListPattern);
           rsltStr.push(parseResult);
           i--;
           continue;
         }
+      } else if (this._isQuoteBlock(input[i])) {
+        const quoteIndex = i;
+        while (input[i] !== '' && i < input.length) i++;
+        const parseResult = this._parse(this._encloseQuote(input.slice(quoteIndex, i)));
+        rsltStr.push({
+          tag: 'blockquote',
+          content: parseResult,
+        });
+        continue;
+      } else if (this._isCodeBlockStart(input[i])) {
+        const codeIndex = ++i;
+        while (!this._isCodeBlockStart(input[i])) i++;
+        // escapeさせる
+        rsltStr.push({
+          tag: 'code',
+          content: this._paseCodeBlock(input.slice(codeIndex, i)).join('<br />'),
+        });
+        continue;
       }
       // normal text <h\d> or <p>
-      rsltStr.push(this._parseLine(this.text[i]));
+      rsltStr.push(this._parseLine(input[i]));
     }
-    return new MdNode(rsltStr);
+    return rsltStr;
   }
 
   /**
@@ -114,6 +157,44 @@ export class Lexer {
     return numberListPattern.test(input);
   }
 
+  /**
+   * check block string is quote
+   * @param {string} input quote string
+   * @return {boolean} result
+   */
+  private _isQuoteBlock(input: string): boolean {
+    return input.charAt(0) === '>';
+  }
+
+  /**
+   * test line is code block paren
+   * @param {string} input string
+   * @return {boolean} result
+   */
+  private _isCodeBlockStart(input: string): boolean {
+    return codeBlockParenPattern.test(input);
+  }
+
+  /**
+   * escape string list
+   * @param {string[]} input texts
+   * @return {string[]} escaped string[]
+   */
+  private _paseCodeBlock(input: string[]): string[] {
+    return input.map((item) => _escapeCodeString(item));
+  }
+
+  /**
+   * enclose quote texts
+   * @param {string} input texts
+   * @return {string[]} string array
+   */
+  private _encloseQuote(input: string[]): string[] {
+    return input.map((item) => {
+      const rslt = item.match(quotePattern) as string[] | null;
+      return rslt !== null ? rslt[1] : item;
+    });
+  }
   /**
    * parse list to ElementNode
    * @param {string} input input lists
