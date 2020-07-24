@@ -28,6 +28,10 @@ describe('Lexer.class', () => {
     '<script src="hoge.js"></script>',
     '<script src="hoge.js"></script>',
     '```',
+    'this is `hoge`',
+    'this is *hoge*',
+    'this is **hoge**',
+    'this is *hoge **fuga***',
   ];
   let lexer: Lexer;
   beforeAll(() => {
@@ -174,6 +178,26 @@ describe('Lexer.class', () => {
         tag: 'code',
         content:
           '&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;<br />&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;',
+      },
+      {
+        tag: 'p' as Token,
+        content:
+          'this is <code class="flav-md-code-inline">hoge</code>',
+      },
+      {
+        tag: 'p' as Token,
+        content:
+          'this is <em class="flav-md-em">hoge</em>',
+      },
+      {
+        tag: 'p' as Token,
+        content:
+          'this is <strong class="flav-md-strong">hoge</strong>',
+      },
+      {
+        tag: 'p' as Token,
+        content:
+          'this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em>',
       },
     ];
     const expected = new MdNode(rsltNodes);

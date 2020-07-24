@@ -141,6 +141,16 @@ describe('Lexer.class', () => {
       content:
         '&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;<br />&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;',
     },
+    {
+      tag: 'p' as Token,
+      content:
+        'this is <code class="flav-md-code-inline">hoge</code>',
+    },
+    {
+      tag: 'p' as Token,
+      content:
+        'this is <em class="flav-md-em">hoge</em>',
+    },
   ] as ElementNode[];
   let mdNode: MdNode;
   beforeAll(() => {
@@ -185,7 +195,9 @@ describe('Lexer.class', () => {
 <h2 class="flav-md-text flav-md-h2 flav-md-h">world</h2>
 <code class="flav-md-code">
   &lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;<br />&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;
-</code>`;
+</code>
+<p class="flav-md-text flav-md-p">this is <code class="flav-md-code-inline">hoge</code></p>
+<p class="flav-md-text flav-md-p">this is <em class="flav-md-em">hoge</em></p>`;
     const actual = mdNode.toHtmlString();
     expect(actual).toEqual(expected);
   });
