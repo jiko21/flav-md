@@ -28,18 +28,18 @@ export class MdNode {
    */
   private createTag(item: ElementNode, indent: number = 0): string {
     if (item.tag === 'ul') {
-      return `<ul>\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
+      return `<ul class="flav-md-ul">\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
         indent,
       )}</ul>`;
     } else if (item.tag === 'ol') {
-      return `<ol>\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
+      return `<ol class="flav-md-ol">\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
         indent,
       )}</ol>`;
     } else if (item.tag === 'li') {
       if (isElementNode(item.content)) {
-        return ' '.repeat(indent) + `<li>${this.createTag(item.content, indent)}</li>`;
+        return ' '.repeat(indent) + `<li class="flav-md-text flav-md-li">${this.createTag(item.content, indent)}</li>`;
       } else {
-        return ' '.repeat(indent) + `<li>${item.content}</li>`;
+        return ' '.repeat(indent) + `<li class="flav-md-text flav-md-li">${item.content}</li>`;
       }
     } else if (item.tag === 'blockquote') {
       const classes = this.generateClassForTheTag(item.tag);
