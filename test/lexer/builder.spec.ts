@@ -159,26 +159,26 @@ describe('Lexer.class', () => {
   it('should correctly parse file', () => {
     const expected = `<h1 class="flav-md-text flav-md-h1 flav-md-h">hello</h1>
 <h2 class="flav-md-text flav-md-h2 flav-md-h">world</h2>
-<ul>
-  <li>hogehoge</li>
-  <li>hogehoge1</li>
-  <li><ul>
-    <li>this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a></li>
-    <li>hogehoge3</li>
-    <li><ul>
-      <li>hoge4</li>
+<ul class="flav-md-ul">
+  <li class="flav-md-text flav-md-li">hogehoge</li>
+  <li class="flav-md-text flav-md-li">hogehoge1</li>
+  <li class="flav-md-text flav-md-li"><ul class="flav-md-ul">
+    <li class="flav-md-text flav-md-li">this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a></li>
+    <li class="flav-md-text flav-md-li">hogehoge3</li>
+    <li class="flav-md-text flav-md-li"><ul class="flav-md-ul">
+      <li class="flav-md-text flav-md-li">hoge4</li>
     </ul></li>
   </ul></li>
-  <li>hogehoge4</li>
+  <li class="flav-md-text flav-md-li">hogehoge4</li>
 </ul>
-<ol>
-  <li>hoge1</li>
-  <li>hoge2</li>
-  <li><ol>
-    <li>aaa</li>
-    <li>ccc</li>
-    <li><ol>
-      <li>ddd</li>
+<ol class="flav-md-ol">
+  <li class="flav-md-text flav-md-li">hoge1</li>
+  <li class="flav-md-text flav-md-li">hoge2</li>
+  <li class="flav-md-text flav-md-li"><ol class="flav-md-ol">
+    <li class="flav-md-text flav-md-li">aaa</li>
+    <li class="flav-md-text flav-md-li">ccc</li>
+    <li class="flav-md-text flav-md-li"><ol class="flav-md-ol">
+      <li class="flav-md-text flav-md-li">ddd</li>
     </ol></li>
   </ol></li>
 </ol>
