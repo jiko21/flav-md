@@ -1,4 +1,4 @@
-import FlavMd from '../src/flavmd';
+import { FlavMd } from '../src/flavmd';
 import { MdNode } from '../src/lexer/builder';
 import * as fileIo from '../src/io/file-io';
 
