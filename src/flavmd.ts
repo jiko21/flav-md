@@ -1,7 +1,7 @@
 import { _readMdFromFile, _readCssFromFile } from './io/file-io';
 import { Lexer } from './lexer/lexer';
 
-export default class FlavMd {
+export class FlavMd {
   // eslint-disable-next-line require-jsdoc
   private htmlText: string;
   // eslint-disable-next-line require-jsdoc
@@ -39,4 +39,8 @@ export default class FlavMd {
   build(): string {
     return `${this.cssText}\n${this.htmlText}`;
   }
+}
+
+export function createFlavMd(): FlavMd {
+  return new FlavMd();
 }

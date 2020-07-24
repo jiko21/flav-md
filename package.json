@@ -2,12 +2,14 @@
   "name": "flav-md",
   "version": "0.0.1",
   "description": "markdown parser with css style",
-  "main": "dist/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc",
+    "prepublishOnly": "npm run build",
     "lint": "eslint -c .eslintrc.json --fix src/**/*",
     "test": "jest --config jest.config.json --coverage"
   },
