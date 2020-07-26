@@ -17,10 +17,10 @@ npm install flav-md
 CommonJS
 ```js
 const flavmd = require('flav-md');
-const result = flav_md_1
+const result = flavmd
   .createFlavMd()
-  .readMd('example.md')
-  .readCss('example.css')
+  .readMdFile('example.md')
+  .readCssFile('example.css')
   .build();
 ```
 
@@ -29,16 +29,17 @@ ES6 or TypeScript
 import {createFlavMd} from 'flav-md';
 
 const result = createFlavMd()
-  .readMd('example.md')
-  .readCss('example.css')
+  .readMdFile('example.md')
+  .readCssFile('example.css')
   .build();
 ```
 
-#### load from textCommonJS
+#### load from text
 CommonJS
 ```js
 const flavmd = require('flav-md');
-const result = flavMd
+const result = flavmd
+  .createFlavMd()
   .readMdText('# hogehoge')
   .readCssText('.flav-md-h1 {color: red;}')
   .build();
@@ -48,7 +49,7 @@ ES6 or TypeScript
 ```ts
 import {createFlavMd} from 'flav-md';
 
-const result = flavMd
+const result = createFlavMd()
   .readMdText('# hogehoge')
   .readCssText('.flav-md-h1 {color: red;}')
   .build();
