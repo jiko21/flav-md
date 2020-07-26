@@ -30,19 +30,25 @@ describe('Lexer.class', () => {
 
   it('should call readHtmlFile When readMd', () => {
     const flavMd = new FlavMd();
-    flavMd.readMd('sample.md');
+    flavMd.readMdFile('sample.md');
     expect(readMdMock).toHaveBeenCalled();
   });
 
   it('should call readHtmlFile When readCss', () => {
     const flavMd = new FlavMd();
-    flavMd.readCss('sample.md');
+    flavMd.readCssFile('sample.md');
     expect(readCssMock).toHaveBeenCalled();
   });
 
   it('should be correctly render html and css', () => {
     const flavMd = new FlavMd();
-    const html = flavMd.readMd('a').readCss('a').build();
+    const html = flavMd.readMdFile('a').readCssFile('a').build();
+    expect(html).toBe(`${cssFile}\n${htmlFile}`);
+  });
+
+  it('should be correctly render html and css', () => {
+    const flavMd = new FlavMd();
+    const html = flavMd.readMdText(htmlFile).readCssText(cssFile).build();
     expect(html).toBe(`${cssFile}\n${htmlFile}`);
   });
 });
