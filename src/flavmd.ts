@@ -1,23 +1,25 @@
 import { _readMdFromFile, _readCssFromFile } from './io/file-io';
 import { Lexer } from './lexer/lexer';
 
+/** class for FlavMd */
 export class FlavMd {
-  // eslint-disable-next-line require-jsdoc
   private htmlText: string;
-  // eslint-disable-next-line require-jsdoc
   private cssText: string;
 
+  /**
+   * constructor
+   */
   constructor() {
     this.htmlText = '';
     this.cssText = '';
   }
 
   /**
-   * read md file
-   * @param {string} mdFilePath file path for markdown
+   * read md from string
+   * @param {string} mdText md string
+   * @return {FlavMd} flavmd istance itself
    */
-  readMd(mdFilePath: string): FlavMd {
-    const mdText = _readMdFromFile(mdFilePath);
+  readMdText(mdText: string): FlavMd {
     const lexer = new Lexer(mdText.split('\n'));
     this.htmlText = lexer.parse().toHtmlString();
     return this;
@@ -26,9 +28,32 @@ export class FlavMd {
   /**
    * read md file
    * @param {string} mdFilePath file path for markdown
+   * @return {FlavMd} flavmd istance itself
    */
-  readCss(cssFilePath: string): FlavMd {
+  readMdFile(mdFilePath: string): FlavMd {
+    const mdText = _readMdFromFile(mdFilePath);
+    const lexer = new Lexer(mdText.split('\n'));
+    this.htmlText = lexer.parse().toHtmlString();
+    return this;
+  }
+
+  /**
+   * read md file
+   * @param {string} cssFilePath file path for markdown
+   * @return {FlavMd} flavmd instance
+   */
+  readCssFile(cssFilePath: string): FlavMd {
     this.cssText = _readCssFromFile(cssFilePath);
+    return this;
+  }
+
+  /**
+   * read from css string
+   * @param {string} cssText
+   * @return {FlavMd} flavmd instance
+   */
+  readCssText(cssText: string): FlavMd {
+    this.cssText = cssText;
     return this;
   }
 
@@ -41,6 +66,10 @@ export class FlavMd {
   }
 }
 
+/**
+ * generate flavmd instance
+ * @return {FlavMd} flavmd instance
+ */
 export function createFlavMd(): FlavMd {
   return new FlavMd();
 }
