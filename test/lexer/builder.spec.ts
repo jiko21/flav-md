@@ -21,29 +21,23 @@ describe('Lexer.class', () => {
         {
           tag: 'li',
           content: 'hogehoge1',
-        },
-        {
-          tag: 'li',
-          content: {
-            tag: 'ul' as Token,
+          children: {
+            tag: 'ul',
             content: [
               {
                 tag: 'li',
                 content:
-                  'this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
+                  'this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
               },
               {
                 tag: 'li',
                 content: 'hogehoge3',
-              },
-              {
-                tag: 'li',
-                content: {
+                children: {
                   tag: 'ul' as Token,
                   content: [
                     {
                       tag: 'li',
-                      content: 'hoge4',
+                      content: 'hoge 4',
                     },
                   ],
                 },
@@ -67,10 +61,7 @@ describe('Lexer.class', () => {
         {
           tag: 'li',
           content: 'hoge2',
-        },
-        {
-          tag: 'li',
-          content: {
+          children: {
             tag: 'ol',
             content: [
               {
@@ -80,10 +71,7 @@ describe('Lexer.class', () => {
               {
                 tag: 'li',
                 content: 'ccc',
-              },
-              {
-                tag: 'li',
-                content: {
+                children: {
                   tag: 'ol',
                   content: [
                     {
@@ -100,11 +88,13 @@ describe('Lexer.class', () => {
     },
     {
       tag: 'p' as Token,
-      content: 'this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
+      content:
+        'this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
     },
     {
       tag: 'p' as Token,
-      content: '画像 <img src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル">',
+      content:
+        '画像 <img class="flav-md-img" src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル">',
     },
     {
       tag: 'blockquote',
@@ -143,13 +133,12 @@ describe('Lexer.class', () => {
     },
     {
       tag: 'p' as Token,
-      content:
-        'this is <code class="flav-md-code-inline">hoge</code>',
+      content: 'this is <strong class="flav-md-strong">hoge</strong>',
     },
     {
       tag: 'p' as Token,
       content:
-        'this is <em class="flav-md-em">hoge</em>',
+        'this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em>',
     },
   ] as ElementNode[];
   let mdNode: MdNode;
@@ -161,29 +150,33 @@ describe('Lexer.class', () => {
 <h2 class="flav-md-text flav-md-h2 flav-md-h">world</h2>
 <ul class="flav-md-ul">
   <li class="flav-md-text flav-md-li">hogehoge</li>
-  <li class="flav-md-text flav-md-li">hogehoge1</li>
-  <li class="flav-md-text flav-md-li"><ul class="flav-md-ul">
-    <li class="flav-md-text flav-md-li">this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a></li>
-    <li class="flav-md-text flav-md-li">hogehoge3</li>
-    <li class="flav-md-text flav-md-li"><ul class="flav-md-ul">
-      <li class="flav-md-text flav-md-li">hoge4</li>
-    </ul></li>
-  </ul></li>
+  <li class="flav-md-text flav-md-li">hogehoge1
+    <ul class="flav-md-ul">
+      <li class="flav-md-text flav-md-li">this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a></li>
+      <li class="flav-md-text flav-md-li">hogehoge3
+        <ul class="flav-md-ul">
+          <li class="flav-md-text flav-md-li">hoge 4</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
   <li class="flav-md-text flav-md-li">hogehoge4</li>
 </ul>
 <ol class="flav-md-ol">
   <li class="flav-md-text flav-md-li">hoge1</li>
-  <li class="flav-md-text flav-md-li">hoge2</li>
-  <li class="flav-md-text flav-md-li"><ol class="flav-md-ol">
-    <li class="flav-md-text flav-md-li">aaa</li>
-    <li class="flav-md-text flav-md-li">ccc</li>
-    <li class="flav-md-text flav-md-li"><ol class="flav-md-ol">
-      <li class="flav-md-text flav-md-li">ddd</li>
-    </ol></li>
-  </ol></li>
+  <li class="flav-md-text flav-md-li">hoge2
+    <ol class="flav-md-ol">
+      <li class="flav-md-text flav-md-li">aaa</li>
+      <li class="flav-md-text flav-md-li">ccc
+        <ol class="flav-md-ol">
+          <li class="flav-md-text flav-md-li">ddd</li>
+        </ol>
+      </li>
+    </ol>
+  </li>
 </ol>
-<p class="flav-md-text flav-md-p">this is <a href="https://www.google.co.jp/" alt="Google先生">Google先生</a></p>
-<p class="flav-md-text flav-md-p">画像 <img src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル"></p>
+<p class="flav-md-text flav-md-p">this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a></p>
+<p class="flav-md-text flav-md-p">画像 <img class="flav-md-img" src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル"></p>
 <blockquote class="flav-md-text flav-md-blockquote">
   <p class="flav-md-text flav-md-p">aaa</p>
   <p class="flav-md-text flav-md-p">bbb</p>
@@ -196,8 +189,8 @@ describe('Lexer.class', () => {
 <code class="flav-md-code">
   &lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;<br />&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;
 </code>
-<p class="flav-md-text flav-md-p">this is <code class="flav-md-code-inline">hoge</code></p>
-<p class="flav-md-text flav-md-p">this is <em class="flav-md-em">hoge</em></p>`;
+<p class="flav-md-text flav-md-p">this is <strong class="flav-md-strong">hoge</strong></p>
+<p class="flav-md-text flav-md-p">this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em></p>`;
     const actual = mdNode.toHtmlString();
     expect(actual).toEqual(expected);
   });

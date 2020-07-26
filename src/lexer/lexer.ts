@@ -29,6 +29,7 @@ namespace Token {
 export type ElementNode = {
   tag: Token;
   content: string | ElementNode | ElementNode[];
+  children?: undefined | ElementNode;
 };
 
 /**
@@ -222,10 +223,9 @@ export class Lexer {
         }
 
         const parseResult = this._parseList(input.slice(startIdnex, i), pattern, indentLength);
-        (resultsNode.content as ElementNode[]).push({
-          tag: 'li',
-          content: parseResult,
-        });
+        (resultsNode.content as ElementNode[])[
+          (resultsNode.content as ElementNode[]).length - 1
+        ].children = parseResult;
         i--;
         continue;
       }
@@ -255,7 +255,8 @@ export class Lexer {
     const _emPattern = /\*(.*?)\*/;
     const _emTemplate = `<em class="flav-md-em">${_escapeCodeString('$1')}</em>`;
     const _input = input;
-    return _input.replace(_imagePattern, _imageTemplate)
+    return _input
+      .replace(_imagePattern, _imageTemplate)
       .replace(_linkPattern, _linkTemplate)
       .replace(_codePattern, _codeTemplate)
       .replace(_strongPattern, _strongTemplate)
