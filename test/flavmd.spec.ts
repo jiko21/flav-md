@@ -43,12 +43,12 @@ describe('Lexer.class', () => {
   it('should be correctly render html and css', () => {
     const flavMd = new FlavMd();
     const html = flavMd.readMdFile('a').readCssFile('a').build();
-    expect(html).toBe(`${cssFile}\n${htmlFile}`);
+    expect(html).toBe(`<style>${cssFile}</style>\n${htmlFile}`);
   });
 
   it('should be correctly render html and css', () => {
     const flavMd = new FlavMd();
     const html = flavMd.readMdText(htmlFile).readCssText(cssFile).build();
-    expect(html).toBe(`${cssFile}\n${htmlFile}`);
+    expect(html).toBe(`<style>${cssFile}</style>\n${htmlFile}`);
   });
 });
