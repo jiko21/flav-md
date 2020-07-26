@@ -1,4 +1,4 @@
-import { ElementNode, Token, isElementNode } from './lexer';
+import { ElementNode, Token } from './lexer';
 
 /** Class representing a MdNode. */
 export class MdNode {
@@ -28,16 +28,25 @@ export class MdNode {
    */
   private createTag(item: ElementNode, indent: number = 0): string {
     if (item.tag === 'ul') {
-      return `<ul class="flav-md-ul">\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
-        indent,
-      )}</ul>`;
+      return `<ul class="flav-md-ul">\n${this.parseNestedTag(
+        item.content as ElementNode[],
+        indent + 2,
+      )}${' '.repeat(indent)}</ul>`;
     } else if (item.tag === 'ol') {
-      return `<ol class="flav-md-ol">\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
-        indent,
-      )}</ol>`;
+      return `<ol class="flav-md-ol">\n${this.parseNestedTag(
+        item.content as ElementNode[],
+        indent + 2,
+      )}${' '.repeat(indent)}</ol>`;
     } else if (item.tag === 'li') {
-      if (isElementNode(item.content)) {
-        return ' '.repeat(indent) + `<li class="flav-md-text flav-md-li">${this.createTag(item.content, indent)}</li>`;
+      let children = '';
+      if (item.children !== undefined) {
+        children = ' '.repeat(indent + 2) + this.createTag(item.children, indent + 2);
+        return (
+          ' '.repeat(indent) +
+          `<li class="flav-md-text flav-md-li">${item.content}\n${children}\n${' '.repeat(
+            indent,
+          )}</li>`
+        );
       } else {
         return ' '.repeat(indent) + `<li class="flav-md-text flav-md-li">${item.content}</li>`;
       }

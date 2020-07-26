@@ -57,11 +57,8 @@ describe('Lexer.class', () => {
           {
             tag: 'li',
             content: 'hogehoge1',
-          },
-          {
-            tag: 'li',
-            content: {
-              tag: 'ul' as Token,
+            children: {
+              tag: 'ul',
               content: [
                 {
                   tag: 'li',
@@ -71,10 +68,7 @@ describe('Lexer.class', () => {
                 {
                   tag: 'li',
                   content: 'hogehoge3',
-                },
-                {
-                  tag: 'li',
-                  content: {
+                  children: {
                     tag: 'ul' as Token,
                     content: [
                       {
@@ -103,10 +97,7 @@ describe('Lexer.class', () => {
           {
             tag: 'li',
             content: 'hoge2',
-          },
-          {
-            tag: 'li',
-            content: {
+            children: {
               tag: 'ol',
               content: [
                 {
@@ -116,10 +107,7 @@ describe('Lexer.class', () => {
                 {
                   tag: 'li',
                   content: 'ccc',
-                },
-                {
-                  tag: 'li',
-                  content: {
+                  children: {
                     tag: 'ol',
                     content: [
                       {
@@ -181,25 +169,22 @@ describe('Lexer.class', () => {
       },
       {
         tag: 'p' as Token,
-        content:
-          'this is <code class="flav-md-code-inline">hoge</code>',
+        content: 'this is <code class="flav-md-code-inline">hoge</code>',
       },
       {
         tag: 'p' as Token,
-        content:
-          'this is <em class="flav-md-em">hoge</em>',
+        content: 'this is <em class="flav-md-em">hoge</em>',
       },
       {
         tag: 'p' as Token,
-        content:
-          'this is <strong class="flav-md-strong">hoge</strong>',
+        content: 'this is <strong class="flav-md-strong">hoge</strong>',
       },
       {
         tag: 'p' as Token,
         content:
           'this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em>',
       },
-    ];
+    ] as ElementNode[];
     const expected = new MdNode(rsltNodes);
     const rslt = lexer.parse();
     expect(rslt).toEqual(expected);
