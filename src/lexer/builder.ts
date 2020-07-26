@@ -1,4 +1,4 @@
-import { ElementNode, Token, isElementNode } from './lexer';
+import { ElementNode, Token } from './lexer';
 
 /** Class representing a MdNode. */
 export class MdNode {
