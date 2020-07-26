@@ -62,7 +62,7 @@ export class FlavMd {
    * @return {string} html and css tags
    */
   build(): string {
-    return `${this.cssText}\n${this.htmlText}`;
+    return `<style>${this.cssText}</style>\n${this.htmlText}`;
   }
 }
 
