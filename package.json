@@ -1,6 +1,6 @@
 {
   "name": "flav-md",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "markdown parser with css style",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
