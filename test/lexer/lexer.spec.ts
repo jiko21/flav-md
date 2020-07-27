@@ -28,7 +28,7 @@ describe('Lexer.class', () => {
     '<script src="hoge.js"></script>',
     '<script src="hoge.js"></script>',
     '```',
-    'this is `hoge`',
+    'this is `hoge` and `fuga`',
     'this is *hoge*',
     'this is **hoge**',
     'this is *hoge **fuga***',
@@ -169,7 +169,8 @@ describe('Lexer.class', () => {
       },
       {
         tag: 'p' as Token,
-        content: 'this is <code class="flav-md-code-inline">hoge</code>',
+        content:
+          'this is <code class="flav-md-code-inline">hoge</code> and <code class="flav-md-code-inline">fuga</code>',
       },
       {
         tag: 'p' as Token,
