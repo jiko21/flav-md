@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+}
+
+main {
+  margin: 0 20%;
+}
+
+h1 {
+  text-align: center;
+}
+
+h2::first-letter {
+  color: #0097A7;
+  font-size: 50px;
+}
+
+header {
+  text-align: center;
+}
+
+footer {
+  background-color: #212121;
+  display: flex;
+  color: #eeeeee;
+  justify-content: center;
+  padding: 40px;
+}
+
+a {
+  color: #0097A7;
+}
+
+.header-logo {
+  text-align: center;
+}
+.terminal {
+  border-radius: 15px;
+  background-color: #23241f;
+  /* font-size: 1.2em; */
+  padding: 5px;
+  min-width: 500px;
+  max-width: 75%;
+  margin: 0 auto;
+}
+
+.code-block {
+  font-size: 1.4em;
+}
+
+.prefix {
+  color: #6e4efc;
+}
