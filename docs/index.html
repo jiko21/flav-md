@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>flav-md</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/monokai-sublime.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>  </head>
+  <body>
+    <header>
+      <img class="header-logo" src="./logo.png" />
+      <p>markdown parser with css style</p>
+      <div class="budge-list">
+        <a href="https://badge.fury.io/gh/jiko21%2Fflav-md"><img src="https://badge.fury.io/gh/jiko21%2Fflav-md.svg" alt="GitHub version" height="18"></a>
+        <a href="https://badge.fury.io/js/flav-md"><img src="https://badge.fury.io/js/flav-md.svg" alt="npm version" height="18"></a>
+      </div>
+    </header>
+    <main>
+    <section>
+      <acticle>
+        <h2>What's flav-md?</h2>
+        <div>
+          <p>
+            Flav-md is an open source library for parsing markdown docs to html with css.
+            When parsing <code>md</code> files with flav-md,
+            html tags in genrated documents have html element class for flav-md;
+            flav-h1, flav-text, etc.
+            Only you have to do is write markdown docs and CSS file for generated htmls.
+          </p>
+        </div>
+      </acticle>
+      <acticle>
+        <h2>How to install?</h2>
+        <div>
+          <p>
+            You can install flav-md via <a href="https://www.npmjs.com/package/flav-md">npm</a> with
+            <pre class="terminal"><code class="language-javascript code-block">$ npm install flav-md</code></pre>
+          </p>
+        </div>
+      </acticle>
+      <acticle>
+        <h2>How to use?</h2>
+        <div>
+          You can use flav-md in Node.js (ES5), ES6, and alos, TypeScript.
+          <article>
+            <h3>Node.js (ES5)</h3>
+            <p>
+              <pre class="terminal"><code class="language-javascript code-block">const flavmd = require('flav-md');
+const result = flavmd
+  .createFlavMd()
+  .readMdFile('example.md')
+  .readCssFile('example.css')
+  .build();</code></pre>
+            </p>
+          </article>
+          <article>
+            <h3>ES6 and TypeScript</h3>
+            <p>
+              <pre class="terminal"><code class="language-javascript code-block">import { createFlavMd } from 'flav-md';
+
+const result = createFlavMd()
+  .readMdText('# hogehoge')
+  .readCssText('.flav-md-h1 {color: red;}')
+  .build();</code></pre>
+            </p>
+          </article>
+        </div>
+      </acticle>
+      <article>
+        <h3>More info</h3>
+        <p>You can show & contribute flav-md in <a href="https://github.com/jiko21/flav-md">GitHub</a>.</p>
+        </article>
+    </section>
+    </main>
+    <footer>
+      © 2020&nbsp;<a href="https://github.com/jiko21"> jiko21</a>
+    </footer>
+  </body>
+</html>
