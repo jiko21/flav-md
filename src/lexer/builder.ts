@@ -27,42 +27,41 @@ export class MdNode {
    * @return {string} html string
    */
   private createTag(item: ElementNode, indent: number = 0): string {
-    if (item.tag === 'ul') {
-      return `<ul class="flav-md-ul">\n${this.parseNestedTag(
-        item.content as ElementNode[],
-        indent + 2,
-      )}${' '.repeat(indent)}</ul>`;
-    } else if (item.tag === 'ol') {
-      return `<ol class="flav-md-ol">\n${this.parseNestedTag(
-        item.content as ElementNode[],
-        indent + 2,
-      )}${' '.repeat(indent)}</ol>`;
-    } else if (item.tag === 'li') {
-      let children = '';
-      if (item.children !== undefined) {
-        children = ' '.repeat(indent + 2) + this.createTag(item.children, indent + 2);
-        return (
-          ' '.repeat(indent) +
-          `<li class="flav-md-text flav-md-li">${item.content}\n${children}\n${' '.repeat(
-            indent,
-          )}</li>`
-        );
-      } else {
-        return ' '.repeat(indent) + `<li class="flav-md-text flav-md-li">${item.content}</li>`;
-      }
-    } else if (item.tag === 'blockquote') {
-      const classes = this.generateClassForTheTag(item.tag);
-      return `${' '.repeat(indent)}<blockquote class="${classes.join(' ')}">\n${this.parseNestedTag(
-        item.content as ElementNode[],
-        indent + 2,
-      )}${' '.repeat(indent)}</blockquote>`;
-    } else if (item.tag === 'code') {
-      return `<code class="flav-md-code">\n  ${item.content}\n</code>`;
-    } else {
-      const classes = this.generateClassForTheTag(item.tag);
-      return `${' '.repeat(indent)}<${item.tag} class="${classes.join(' ')}">${item.content}</${
-        item.tag
-      }>`;
+    const classes = this.generateClassForTheTag(item.tag);
+    switch (item.tag) {
+      case 'ul':
+        return `<ul class="flav-md-ul">\n${this.parseNestedTag(
+          item.content as ElementNode[],
+          indent + 2,
+        )}${' '.repeat(indent)}</ul>`;
+      case 'ol':
+        return `<ol class="flav-md-ol">\n${this.parseNestedTag(
+          item.content as ElementNode[],
+          indent + 2,
+        )}${' '.repeat(indent)}</ol>`;
+      case 'li':
+        let children = '';
+        if (item.children !== undefined) {
+          children = ' '.repeat(indent + 2) + this.createTag(item.children, indent + 2);
+          return (
+            ' '.repeat(indent) +
+            `<li class="flav-md-text flav-md-li">${item.content}\n${children}\n${' '.repeat(
+              indent,
+            )}</li>`
+          );
+        } else {
+          return ' '.repeat(indent) + `<li class="flav-md-text flav-md-li">${item.content}</li>`;
+        }
+      case 'blockquote':
+        return `${' '.repeat(indent)}<blockquote class="${classes.join(' ')}">\n${this.parseNestedTag(
+          item.content as ElementNode[],
+          indent + 2,
+        )}${' '.repeat(indent)}</blockquote>`;
+      case 'code':
+        return `<code class="flav-md-code">\n  ${item.content}\n</code>`;
+      default:
+        return `${' '.repeat(indent)}<${item.tag} class="${classes.join(' ')}">${item.content}</${item.tag
+          }>`;
     }
   }
 
