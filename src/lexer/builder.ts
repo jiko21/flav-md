@@ -1,4 +1,4 @@
-import { ElementNode, Token } from './lexer';
+import { ElementNode, Table, TableHead, Token } from './lexer';
 
 /** Class representing a MdNode. */
 export class MdNode {
@@ -53,15 +53,19 @@ export class MdNode {
           return ' '.repeat(indent) + `<li class="flav-md-text flav-md-li">${item.content}</li>`;
         }
       case 'blockquote':
-        return `${' '.repeat(indent)}<blockquote class="${classes.join(' ')}">\n${this.parseNestedTag(
-          item.content as ElementNode[],
-          indent + 2,
-        )}${' '.repeat(indent)}</blockquote>`;
+        return `${' '.repeat(indent)}<blockquote class="${classes.join(
+          ' ',
+        )}">\n${this.parseNestedTag(item.content as ElementNode[], indent + 2)}${' '.repeat(
+          indent,
+        )}</blockquote>`;
       case 'code':
         return `<code class="flav-md-code">\n  ${item.content}\n</code>`;
+      case 'table':
+        return this.generateTable(item);
       default:
-        return `${' '.repeat(indent)}<${item.tag} class="${classes.join(' ')}">${item.content}</${item.tag
-          }>`;
+        return `${' '.repeat(indent)}<${item.tag} class="${classes.join(' ')}">${item.content}</${
+          item.tag
+        }>`;
     }
   }
 
@@ -77,6 +81,65 @@ export class MdNode {
       results += `${this.createTag(item, indent)}\n`;
     });
     return results;
+  }
+
+  /**
+   * parse element to table
+   * @param {ElementNode} node table tree
+   * @return {string} html table string
+   */
+  private generateTable(node: ElementNode): string {
+    const table = node.content as Table;
+    const head = table.head;
+    const body = table.body;
+    // create thead section
+    const thead = this.createThead(head);
+    const tbody = this.createTbody(head, body);
+    return `<table>
+${thead}
+${tbody}
+</table>`;
+  }
+
+  /**
+   * parse thead
+   * @param {TableHead[]} head
+   * @return {string} tbody
+   */
+  private createThead(head: TableHead[]): string {
+    return `  <thead>
+    <tr>
+${head
+  .map((item) => {
+    return `      <th style="text-align: ${item.align}">${item.cell}</th>`;
+  })
+  .join('\n')}
+    </tr>
+  </thead>`;
+  }
+
+  /**
+   * parse head and columns to tbody
+   * @param {TableHead[]} head column info
+   * @param {string[][]} body row data
+   * @return {string} html tbody
+   */
+  private createTbody(head: TableHead[], body: string[][]): string {
+    const trs = body
+      .map((rows) => {
+        const tds = rows
+          .map((item, i) => {
+            return `      <td style="text-align: ${head[i].align}">${item}</td>`;
+          })
+          .join('\n');
+        return `    <tr>
+${tds}
+    </tr>`;
+      })
+      .join('\n');
+    return `  <tbody>
+${trs}
+  </tbody>`;
   }
 
   /**
