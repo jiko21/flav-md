@@ -12,7 +12,8 @@ export type Token =
   | 'ol'
   | 'li'
   | 'blockquote'
-  | 'code';
+  | 'code'
+  | 'table';
 
 namespace Token {
   /**
@@ -28,9 +29,25 @@ namespace Token {
 
 export type ElementNode = {
   tag: Token;
-  content: string | ElementNode | ElementNode[];
+  content: string | ElementNode | ElementNode[] | Table;
   children?: undefined | ElementNode;
 };
+
+export type Table = {
+  head: TableHead[];
+  body: string[][];
+};
+
+export type TableHead = {
+  cell: string;
+  align: Align;
+};
+
+enum Align {
+  CENTER = 'center',
+  LEFT = 'left',
+  RIGHT = 'right',
+}
 
 /**
  * check whether arg is ElemetNode
