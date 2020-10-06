@@ -118,6 +118,7 @@ ${head
   </thead>`;
   }
 
+  // eslint-disable-next-line valid-jsdoc
   /**
    * parse head and columns to tbody
    * @param {TableHead[]} head column info
