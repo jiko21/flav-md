@@ -4,34 +4,40 @@ import { MdNode } from '../../src/lexer/builder';
 describe('Lexer.class', () => {
   const text = [
     '# hello',
-    '## world',
-    '* hogehoge',
-    '* hogehoge1',
-    '  * this is [Google先生](https://www.google.co.jp/)',
-    '  * hogehoge3',
-    '    * hoge 4',
-    '* hogehoge4',
-    '1. hoge1',
-    '2. hoge2',
-    '  1. aaa',
-    '  2. ccc',
-    '    1. ddd',
-    'this is [Google先生](https://www.google.co.jp/)',
-    '画像 ![エビフライトライアングル](http://i.imgur.com/Jjwsc.jpg)',
-    '> aaa',
-    'bbb',
-    '>> ccc',
-    'ddd',
-    '',
-    '## world',
-    '```',
-    '<script src="hoge.js"></script>',
-    '<script src="hoge.js"></script>',
-    '```',
-    'this is `hoge` and `fuga`',
-    'this is *hoge*',
-    'this is **hoge**',
+    // '## world',
+    // '* hogehoge',
+    // '* hogehoge1',
+    // '  * this is [Google先生](https://www.google.co.jp/)',
+    // '  * hogehoge3',
+    // '    * hoge 4',
+    // '* hogehoge4',
+    // '1. hoge1',
+    // '2. hoge2',
+    // '  1. aaa',
+    // '  2. ccc',
+    // '    1. ddd',
+    // 'this is [Google先生](https://www.google.co.jp/)',
+    // '画像 ![エビフライトライアングル](http://i.imgur.com/Jjwsc.jpg)',
+    // '> aaa',
+    // 'bbb',
+    // '>> ccc',
+    // 'ddd',
+    // '',
+    // '## world',
+    // '```',
+    // '<script src="hoge.js"></script>',
+    // '<script src="hoge.js"></script>',
+    // '```',
+    // 'this is `hoge` and `fuga`',
+    // 'this is *hoge*',
+    // 'this is **hoge**',
     'this is *hoge **fuga***',
+    '|  head1  | head2 | head3|',
+    '|:----:|-----:|:----- |',
+    '|  aaa1  | bbb1 | ccc1|',
+    '|  aaa2 | bbb2 | ccc2|',
+    '',
+    'aaa',
   ];
   let lexer: Lexer;
   beforeAll(() => {
@@ -184,6 +190,34 @@ describe('Lexer.class', () => {
         tag: 'p' as Token,
         content:
           'this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em>',
+      },
+      {
+        tag: 'table' as Token,
+        content: {
+          head: [
+            {
+              cell: 'head1',
+              align: 'center',
+            },
+            {
+              cell: 'head2',
+              align: 'right',
+            },
+            {
+              cell: 'head3',
+              align: 'left',
+            },
+          ],
+          body: [
+            ['aaa1', 'bbb1', 'ccc1'],
+            ['aaa2', 'bbb2', 'ccc2'],
+          ]
+        }
+      },
+      {
+        tag: 'p' as Token,
+        content:
+          'aaa',
       },
     ] as ElementNode[];
     const expected = new MdNode(rsltNodes);
