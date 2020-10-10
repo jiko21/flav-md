@@ -12,7 +12,8 @@ export type Token =
   | 'ol'
   | 'li'
   | 'blockquote'
-  | 'code';
+  | 'code'
+  | 'table';
 
 namespace Token {
   /**
@@ -28,9 +29,25 @@ namespace Token {
 
 export type ElementNode = {
   tag: Token;
-  content: string | ElementNode | ElementNode[];
+  content: string | ElementNode | ElementNode[] | Table;
   children?: undefined | ElementNode;
 };
+
+export type Table = {
+  head: TableHead[];
+  body: string[][];
+};
+
+export type TableHead = {
+  cell: string;
+  align: Align;
+};
+
+enum Align {
+  CENTER = 'center',
+  LEFT = 'left',
+  RIGHT = 'right',
+}
 
 /**
  * check whether arg is ElemetNode
@@ -45,10 +62,11 @@ export const _createLexer = (input: string[]): Lexer => {
   return new Lexer(input);
 };
 
-const simpleListPattern = /^([\s\s]*)[\*|-]\s(.+)/;
+const simpleListPattern = /^([\s\s]*)[\*-]\s(.+)/;
 const numberListPattern = /^([\s\s]*)\d+\.\s(.+)/;
 const quotePattern = /^>\s*([\s\>]*.+)/;
 const codeBlockParenPattern = /^```$/;
+const tableHeadPattern = /(?:\s?(.+?)\s?\|)+?/gm;
 
 /** Class representing a lexer. */
 export class Lexer {
@@ -112,6 +130,18 @@ export class Lexer {
           content: this._paseCodeBlock(input.slice(codeIndex, i)).join('<br />'),
         });
         continue;
+      } else if (this._isTableBlockStart(input[i])) {
+        const tableHead = this._getTableHeadInfo(input.slice(i, i + 2));
+        i += 2;
+        const [rows, skip] = this._parseTableBody(input.slice(i));
+        i += skip;
+        rsltStr.push({
+          tag: 'table',
+          content: {
+            head: tableHead,
+            body: rows,
+          },
+        });
       }
       // normal text <h\d> or <p>
       rsltStr.push(this._parseLine(input[i]));
@@ -237,6 +267,90 @@ export class Lexer {
     }
     return resultsNode;
   }
+
+  /**
+   * check the table start
+   * @param {string} input
+   * @return {boolean} is table?
+   */
+  private _isTableBlockStart(input: string): boolean {
+    return input[0] === '|' && input.substr(1).match(tableHeadPattern) !== null;
+  }
+
+  /**
+   * parse table head
+   * @param {string[]} input
+   * @return {TableHead[]} result
+   */
+  private _getTableHeadInfo(input: string[]): TableHead[] {
+    const head = this._getTableColumnName(input[0].substr(1));
+    const aligns = this._getColumnAlign(input[1].substr(1));
+    return Array.from(Array(head.length)).map((_, i) => {
+      return {
+        cell: head[i],
+        align: aligns[i],
+      };
+    });
+  }
+
+  /**
+   * get table columns
+   * @param {string} input
+   * @return {string[]} rslt
+   */
+  private _getTableColumnName(input: string): string[] {
+    const head = [];
+    let m: RegExpExecArray | null;
+    const regex = tableHeadPattern;
+    while ((m = regex.exec(input)) !== null) {
+      if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
+      }
+      head.push(m[1].trim());
+    }
+    return head;
+  }
+
+  /**
+   * get column align info
+   * @param {string} input
+   * @return {Align[]} align list
+   */
+  private _getColumnAlign(input: string): Align[] {
+    const aligns = [];
+    let m: RegExpExecArray | null;
+    const regex = tableHeadPattern;
+    while ((m = regex.exec(input)) !== null) {
+      if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
+      }
+      if (m[1].match(/^:-+$/)) {
+        aligns.push(Align.LEFT);
+      } else if (m[1].match(/^-+:$/)) {
+        aligns.push(Align.RIGHT);
+      } else if (m[1].match(/^:-+:$/)) {
+        aligns.push(Align.CENTER);
+      }
+    }
+    return aligns;
+  }
+
+  // eslint-disable-next-line valid-jsdoc
+  /**
+   * parse table body from strings
+   * @param {string[]} input
+   * @return {[string[][], number]}
+   *  table rows array and its count
+   */
+  private _parseTableBody(input: string[]): [string[][], number] {
+    let nowAt = 0;
+    const rows = [];
+    while (this._isTableBlockStart(input[nowAt])) {
+      rows.push(this._getTableColumnName(input[nowAt++].substr(1)));
+    }
+    return [rows, nowAt];
+  }
+
   /**
    * parse one line string and replace link and img
    * @private

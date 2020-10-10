@@ -140,6 +140,34 @@ describe('Lexer.class', () => {
       content:
         'this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em>',
     },
+    {
+      tag: 'table' as Token,
+      content: {
+        head: [
+          {
+            cell: 'head1',
+            align: 'center',
+          },
+          {
+            cell: 'head2',
+            align: 'right',
+          },
+          {
+            cell: 'head3',
+            align: 'left',
+          },
+        ],
+        body: [
+          ['aaa1', 'bbb1', 'ccc1'],
+          ['aaa2', 'bbb2', 'ccc2'],
+        ]
+      }
+    },
+    {
+      tag: 'p' as Token,
+      content:
+        'aaa',
+    },
   ] as ElementNode[];
   let mdNode: MdNode;
   beforeAll(() => {
@@ -190,7 +218,29 @@ describe('Lexer.class', () => {
   &lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;<br />&lt;script src=&quot;hoge.js&quot;&gt;&lt;/script&gt;
 </code>
 <p class="flav-md-text flav-md-p">this is <strong class="flav-md-strong">hoge</strong></p>
-<p class="flav-md-text flav-md-p">this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em></p>`;
+<p class="flav-md-text flav-md-p">this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em></p>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">head1</th>
+      <th style="text-align: right">head2</th>
+      <th style="text-align: left">head3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">aaa1</td>
+      <td style="text-align: right">bbb1</td>
+      <td style="text-align: left">ccc1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">aaa2</td>
+      <td style="text-align: right">bbb2</td>
+      <td style="text-align: left">ccc2</td>
+    </tr>
+  </tbody>
+</table>
+<p class="flav-md-text flav-md-p">aaa</p>`;
     const actual = mdNode.toHtmlString();
     expect(actual).toEqual(expected);
   });

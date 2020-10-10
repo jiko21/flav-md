@@ -32,6 +32,11 @@ describe('Lexer.class', () => {
     'this is *hoge*',
     'this is **hoge**',
     'this is *hoge **fuga***',
+    '|  head1  | head2 | head3|',
+    '|:----:|-----:|:----- |',
+    '|  aaa1  | bbb1 | ccc1|',
+    '|  aaa2 | bbb2 | ccc2|',
+    'aaa',
   ];
   let lexer: Lexer;
   beforeAll(() => {
@@ -184,6 +189,34 @@ describe('Lexer.class', () => {
         tag: 'p' as Token,
         content:
           'this is <em class="flav-md-em">hoge <strong class="flav-md-strong">fuga</strong></em>',
+      },
+      {
+        tag: 'table' as Token,
+        content: {
+          head: [
+            {
+              cell: 'head1',
+              align: 'center',
+            },
+            {
+              cell: 'head2',
+              align: 'right',
+            },
+            {
+              cell: 'head3',
+              align: 'left',
+            },
+          ],
+          body: [
+            ['aaa1', 'bbb1', 'ccc1'],
+            ['aaa2', 'bbb2', 'ccc2'],
+          ]
+        }
+      },
+      {
+        tag: 'p' as Token,
+        content:
+          'aaa',
       },
     ] as ElementNode[];
     const expected = new MdNode(rsltNodes);
