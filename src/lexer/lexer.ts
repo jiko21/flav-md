@@ -66,7 +66,7 @@ const simpleListPattern = /^([\s\s]*)[\*-]\s(.+)/;
 const numberListPattern = /^([\s\s]*)\d+\.\s(.+)/;
 const quotePattern = /^>\s*([\s\>]*.+)/;
 const codeBlockParenPattern = /^```$/;
-const tableHeadPattern = /(?:\s?(.+?)\s?\|)+?/;
+const tableHeadPattern = /(?:\s?(.+?)\s?\|)+?/gm;
 
 /** Class representing a lexer. */
 export class Lexer {
@@ -131,10 +131,10 @@ export class Lexer {
         });
         continue;
       } else if (this._isTableBlockStart(input[i])) {
-        const tableHead = this._getTableHeadInfo(input.slice(i, i+2));
+        const tableHead = this._getTableHeadInfo(input.slice(i, i + 2));
         i += 2;
         const [rows, skip] = this._parseTableBody(input.slice(i));
-        i = i + skip - 1;
+        i += skip;
         rsltStr.push({
           tag: 'table',
           content: {
@@ -271,7 +271,7 @@ export class Lexer {
   /**
    * check the table start
    * @param {string} input
-   * @return {boolean} is table? 
+   * @return {boolean} is table?
    */
   private _isTableBlockStart(input: string): boolean {
     return input[0] === '|' && input.substr(1).match(tableHeadPattern) !== null;
@@ -296,7 +296,7 @@ export class Lexer {
   /**
    * get table columns
    * @param {string} input
-   * @return {string[]} rslt 
+   * @return {string[]} rslt
    */
   private _getTableColumnName(input: string): string[] {
     const head = [];
@@ -306,11 +306,16 @@ export class Lexer {
       if (m.index === regex.lastIndex) {
         regex.lastIndex++;
       }
-      head.push(m[1]);
+      head.push(m[1].trim());
     }
     return head;
   }
 
+  /**
+   * get column align info
+   * @param {string} input
+   * @return {Align[]} align list
+   */
   private _getColumnAlign(input: string): Align[] {
     const aligns = [];
     let m: RegExpExecArray | null;
@@ -322,7 +327,7 @@ export class Lexer {
       if (m[1].match(/^:-+$/)) {
         aligns.push(Align.LEFT);
       } else if (m[1].match(/^-+:$/)) {
-        aligns.push(Align.RIGHT)
+        aligns.push(Align.RIGHT);
       } else if (m[1].match(/^:-+:$/)) {
         aligns.push(Align.CENTER);
       }
@@ -330,11 +335,18 @@ export class Lexer {
     return aligns;
   }
 
+  // eslint-disable-next-line valid-jsdoc
+  /**
+   * parse table body from strings
+   * @param {string[]} input
+   * @return {[string[][], number]}
+   *  table rows array and its count
+   */
   private _parseTableBody(input: string[]): [string[][], number] {
     let nowAt = 0;
-    const rows = []
+    const rows = [];
     while (this._isTableBlockStart(input[nowAt])) {
-      rows.push(this._getTableColumnName(input[nowAt++]));
+      rows.push(this._getTableColumnName(input[nowAt++].substr(1)));
     }
     return [rows, nowAt];
   }
