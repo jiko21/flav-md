@@ -1,4 +1,5 @@
-import { ElementNode, Table, TableHead, Token } from './lexer';
+import { ElementNode, Token } from './lexer';
+import { Table, TableHead } from './pattern/table';
 
 /** Class representing a MdNode. */
 export class MdNode {

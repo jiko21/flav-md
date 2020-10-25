@@ -160,13 +160,12 @@ describe('Lexer.class', () => {
         body: [
           ['aaa1', 'bbb1', 'ccc1'],
           ['aaa2', 'bbb2', 'ccc2'],
-        ]
-      }
+        ],
+      },
     },
     {
       tag: 'p' as Token,
-      content:
-        'aaa',
+      content: 'aaa',
     },
   ] as ElementNode[];
   let mdNode: MdNode;
