@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "lint": "eslint -c .eslintrc.json --fix src/**/*",
+    "lint": "eslint -c .eslintrc.json --fix src/**/*.ts",
     "test": "jest --config jest.config.json --coverage"
   },
   "keywords": [
