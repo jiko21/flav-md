@@ -16,6 +16,6 @@ export const isCodeBlockStart = (input: string): boolean => {
  * @param {string[]} input texts
  * @return {string[]} escaped string[]
  */
-export const paseCodeBlock = (input: string[]): string[] => {
+export const parseCodeBlock = (input: string[]): string[] => {
   return input.map((item) => _escapeCodeString(item));
 };

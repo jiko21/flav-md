@@ -4,7 +4,7 @@ import { parseList } from './pattern/list';
 import { isList, simpleListPattern } from './pattern/simpleList';
 import { isNumberList, numberListPattern } from './pattern/numberList';
 import { isTableBlockStart, parseTable, Table } from './pattern/table';
-import { isCodeBlockStart, paseCodeBlock } from './pattern/codeBlock';
+import { isCodeBlockStart, parseCodeBlock } from './pattern/codeBlock';
 import { encloseQuote, isQuoteBlock } from './pattern/quote';
 export type Token =
   | 'h1'
@@ -109,7 +109,7 @@ export class Lexer {
         // escapeさせる
         rsltStr.push({
           tag: 'code',
-          content: paseCodeBlock(input.slice(codeIndex, i)).join('<br />'),
+          content: parseCodeBlock(input.slice(codeIndex, i)).join('<br />'),
         });
         continue;
       } else if (isTableBlockStart(input[i])) {
