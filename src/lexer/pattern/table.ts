@@ -22,7 +22,9 @@ const tableHeadPattern = /(?:\s?(.+?)\s?\|)+?/gm;
  * @return {boolean} is table?
  */
 export const isTableBlockStart = (input: string): boolean => {
-  return input[0] === '|' && input.substr(1).match(tableHeadPattern) !== null;
+  return (
+    input[0] === '|' && input.substr(1).match(tableHeadPattern) !== null && input.slice(-1) === '|'
+  );
 };
 
 /**
@@ -93,7 +95,7 @@ const getTableHeadInfo = (input: string[]): TableHead[] => {
 const parseTableBody = (input: string[]): [string[][], number] => {
   let nowAt = 0;
   const rows = [];
-  while (isTableBlockStart(input[nowAt])) {
+  while (input[nowAt] && isTableBlockStart(input[nowAt])) {
     rows.push(getTableColumnName(input[nowAt++].substr(1)));
   }
   return [rows, nowAt];
