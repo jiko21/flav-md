@@ -1,5 +1,5 @@
 import { _readMdFromFile, _readCssFromFile } from './io/file-io';
-import { Lexer } from './lexer/lexer';
+import { _createLexer } from './lexer/lexer';
 
 /** class for FlavMd */
 export class FlavMd {
@@ -20,7 +20,7 @@ export class FlavMd {
    * @return {FlavMd} flavmd istance itself
    */
   readMdText(mdText: string): FlavMd {
-    const lexer = new Lexer(mdText.split('\n'));
+    const lexer = _createLexer(mdText.split('\n'));
     this.htmlText = lexer.parse().toHtmlString();
     return this;
   }
@@ -32,7 +32,7 @@ export class FlavMd {
    */
   readMdFile(mdFilePath: string): FlavMd {
     const mdText = _readMdFromFile(mdFilePath);
-    const lexer = new Lexer(mdText.split('\n'));
+    const lexer = _createLexer(mdText.split('\n'));
     this.htmlText = lexer.parse().toHtmlString();
     return this;
   }
