@@ -7,7 +7,7 @@ describe('Lexer.class', () => {
     '## world',
     '* hogehoge',
     '* hogehoge1',
-    '  * this is [Google先生](https://www.google.co.jp/)',
+    '  * this is [Google先生](https://example.com)',
     '  * hogehoge3',
     '    * hoge 4',
     '* hogehoge4',
@@ -16,8 +16,8 @@ describe('Lexer.class', () => {
     '  1. aaa',
     '  2. ccc',
     '    1. ddd',
-    'this is [Google先生](https://www.google.co.jp/)',
-    '画像 ![エビフライトライアングル](http://i.imgur.com/Jjwsc.jpg)',
+    'this is [Google先生](https://example.com)',
+    '画像 ![エビフライトライアングル](https://example.com)',
     '> aaa',
     'bbb',
     '>> ccc',
@@ -68,7 +68,7 @@ describe('Lexer.class', () => {
                 {
                   tag: 'li',
                   content:
-                    'this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
+                    'this is <a class="flav-md-a" href="https://example.com" alt="Google先生">Google先生</a>',
                 },
                 {
                   tag: 'li',
@@ -130,12 +130,12 @@ describe('Lexer.class', () => {
       {
         tag: 'p' as Token,
         content:
-          'this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
+          'this is <a class="flav-md-a" href="https://example.com" alt="Google先生">Google先生</a>',
       },
       {
         tag: 'p' as Token,
         content:
-          '画像 <img class="flav-md-img" src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル">',
+          '画像 <img class="flav-md-img" src="https://example.com" alt="エビフライトライアングル">',
       },
       {
         tag: 'blockquote',
@@ -210,13 +210,12 @@ describe('Lexer.class', () => {
           body: [
             ['aaa1', 'bbb1', 'ccc1'],
             ['aaa2', 'bbb2', 'ccc2'],
-          ]
-        }
+          ],
+        },
       },
       {
         tag: 'p' as Token,
-        content:
-          'aaa',
+        content: 'aaa',
       },
     ] as ElementNode[];
     const expected = new MdNode(rsltNodes);

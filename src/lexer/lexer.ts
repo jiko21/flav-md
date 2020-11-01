@@ -1,5 +1,11 @@
 import { MdNode } from './builder';
-import { _escapeCodeString } from '../util/string-util';
+import { inlineParse } from './pattern/inline';
+import { parseList } from './pattern/list';
+import { isList, simpleListPattern } from './pattern/simpleList';
+import { isNumberList, numberListPattern } from './pattern/numberList';
+import { isTableBlockStart, parseTable, Table } from './pattern/table';
+import { isCodeBlockStart, parseCodeBlock } from './pattern/codeBlock';
+import { encloseQuote, isQuoteBlock } from './pattern/quote';
 export type Token =
   | 'h1'
   | 'h2'
@@ -33,40 +39,9 @@ export type ElementNode = {
   children?: undefined | ElementNode;
 };
 
-export type Table = {
-  head: TableHead[];
-  body: string[][];
-};
-
-export type TableHead = {
-  cell: string;
-  align: Align;
-};
-
-enum Align {
-  CENTER = 'center',
-  LEFT = 'left',
-  RIGHT = 'right',
-}
-
-/**
- * check whether arg is ElemetNode
- * @param {any} arg argument
- * @return {boolean} result
- */
-export const isElementNode = (arg: any): arg is ElementNode => {
-  return arg.tag !== undefined && arg.content !== undefined;
-};
-
 export const _createLexer = (input: string[]): Lexer => {
   return new Lexer(input);
 };
-
-const simpleListPattern = /^([\s\s]*)[\*-]\s(.+)/;
-const numberListPattern = /^([\s\s]*)\d+\.\s(.+)/;
-const quotePattern = /^>\s*([\s\>]*.+)/;
-const codeBlockParenPattern = /^```$/;
-const tableHeadPattern = /(?:\s?(.+?)\s?\|)+?/gm;
 
 /** Class representing a lexer. */
 export class Lexer {
@@ -94,53 +69,46 @@ export class Lexer {
     const rsltStr = [] as ElementNode[];
     for (let i = 0; i < input.length; i++) {
       const _listIndex = i;
-      if (this._isList(input[i])) {
-        while (this._isList(input[i])) i++;
-
+      if (isList(input[i])) {
+        while (isList(input[i])) i++;
         if (_listIndex !== i) {
-          const parseResult = this._parseList(input.slice(_listIndex, i), simpleListPattern);
+          const parseResult = parseList(input.slice(_listIndex, i), simpleListPattern);
           rsltStr.push(parseResult);
           i--;
           continue;
         }
-      } else if (this._isNumberList(input[i])) {
-        while (this._isNumberList(input[i])) i++;
-
+      } else if (isNumberList(input[i])) {
+        while (isNumberList(input[i])) i++;
         if (_listIndex !== i) {
-          const parseResult = this._parseList(input.slice(_listIndex, i), numberListPattern);
+          const parseResult = parseList(input.slice(_listIndex, i), numberListPattern);
           rsltStr.push(parseResult);
           i--;
           continue;
         }
-      } else if (this._isQuoteBlock(input[i])) {
+      } else if (isQuoteBlock(input[i])) {
         const quoteIndex = i;
         while (input[i] !== '' && i < input.length) i++;
-        const parseResult = this._parse(this._encloseQuote(input.slice(quoteIndex, i)));
+        const parseResult = this._parse(encloseQuote(input.slice(quoteIndex, i)));
         rsltStr.push({
           tag: 'blockquote',
           content: parseResult,
         });
         continue;
-      } else if (this._isCodeBlockStart(input[i])) {
+      } else if (isCodeBlockStart(input[i])) {
         const codeIndex = ++i;
-        while (!this._isCodeBlockStart(input[i])) i++;
+        while (!isCodeBlockStart(input[i])) i++;
         // escapeさせる
         rsltStr.push({
           tag: 'code',
-          content: this._paseCodeBlock(input.slice(codeIndex, i)).join('<br />'),
+          content: parseCodeBlock(input.slice(codeIndex, i)).join('<br />'),
         });
         continue;
-      } else if (this._isTableBlockStart(input[i])) {
-        const tableHead = this._getTableHeadInfo(input.slice(i, i + 2));
-        i += 2;
-        const [rows, skip] = this._parseTableBody(input.slice(i));
+      } else if (isTableBlockStart(input[i])) {
+        const [table, skip] = parseTable(input.slice(i));
         i += skip;
         rsltStr.push({
           tag: 'table',
-          content: {
-            head: tableHead,
-            body: rows,
-          },
+          content: table,
         });
       }
       // normal text <h\d> or <p>
@@ -166,214 +134,7 @@ export class Lexer {
     }
     return {
       tag: Token.valueOf(sharpCount),
-      content: this._inlineParse(input.substring(sharpCount === 0 ? sharpCount : sharpCount + 1)),
+      content: inlineParse(input.substring(sharpCount === 0 ? sharpCount : sharpCount + 1)),
     };
-  }
-
-  /**
-   * check whether input is list
-   * @param {string} input string
-   * @return {boolean} whether input is list
-   */
-  private _isList(input: string): boolean {
-    return simpleListPattern.test(input);
-  }
-
-  /**
-   * check whether input is number list
-   * @param {string} input string
-   * @return {boolean} whether input is list
-   */
-  private _isNumberList(input: string): boolean {
-    return numberListPattern.test(input);
-  }
-
-  /**
-   * check block string is quote
-   * @param {string} input quote string
-   * @return {boolean} result
-   */
-  private _isQuoteBlock(input: string): boolean {
-    return input.charAt(0) === '>';
-  }
-
-  /**
-   * test line is code block paren
-   * @param {string} input string
-   * @return {boolean} result
-   */
-  private _isCodeBlockStart(input: string): boolean {
-    return codeBlockParenPattern.test(input);
-  }
-
-  /**
-   * escape string list
-   * @param {string[]} input texts
-   * @return {string[]} escaped string[]
-   */
-  private _paseCodeBlock(input: string[]): string[] {
-    return input.map((item) => _escapeCodeString(item));
-  }
-
-  /**
-   * enclose quote texts
-   * @param {string} input texts
-   * @return {string[]} string array
-   */
-  private _encloseQuote(input: string[]): string[] {
-    return input.map((item) => {
-      const rslt = item.match(quotePattern) as string[] | null;
-      return rslt !== null ? rslt[1] : item;
-    });
-  }
-  /**
-   * parse list to ElementNode
-   * @param {string} input input lists
-   * @param {RegExp} pattern parse pattern
-   * @param {number} nowIndent indent length
-   * @return {ElementNode | ElementNode[]} results
-   */
-  private _parseList(input: string[], pattern: RegExp, nowIndent: number = 0): ElementNode {
-    const resultsNode: ElementNode = {
-      tag: pattern === simpleListPattern ? 'ul' : 'ol',
-      content: [] as ElementNode[],
-    };
-    for (let i = 0; i < input.length; i++) {
-      const [indentLine, content] = (input[i].match(pattern) as string[]).splice(1, 2);
-      const indentLength = indentLine.length;
-      if (indentLength > nowIndent) {
-        const startIdnex = i;
-        while (true) {
-          i++;
-          if (i >= input.length) break;
-          const _indentLength = (input[i].match(pattern) as string[])[1].length;
-          if (_indentLength < indentLength) {
-            break;
-          }
-        }
-
-        const parseResult = this._parseList(input.slice(startIdnex, i), pattern, indentLength);
-        (resultsNode.content as ElementNode[])[
-          (resultsNode.content as ElementNode[]).length - 1
-        ].children = parseResult;
-        i--;
-        continue;
-      }
-
-      (resultsNode.content as ElementNode[]).push({
-        tag: 'li',
-        content: this._inlineParse(content),
-      });
-    }
-    return resultsNode;
-  }
-
-  /**
-   * check the table start
-   * @param {string} input
-   * @return {boolean} is table?
-   */
-  private _isTableBlockStart(input: string): boolean {
-    return input[0] === '|' && input.substr(1).match(tableHeadPattern) !== null;
-  }
-
-  /**
-   * parse table head
-   * @param {string[]} input
-   * @return {TableHead[]} result
-   */
-  private _getTableHeadInfo(input: string[]): TableHead[] {
-    const head = this._getTableColumnName(input[0].substr(1));
-    const aligns = this._getColumnAlign(input[1].substr(1));
-    return Array.from(Array(head.length)).map((_, i) => {
-      return {
-        cell: head[i],
-        align: aligns[i],
-      };
-    });
-  }
-
-  /**
-   * get table columns
-   * @param {string} input
-   * @return {string[]} rslt
-   */
-  private _getTableColumnName(input: string): string[] {
-    const head = [];
-    let m: RegExpExecArray | null;
-    const regex = tableHeadPattern;
-    while ((m = regex.exec(input)) !== null) {
-      if (m.index === regex.lastIndex) {
-        regex.lastIndex++;
-      }
-      head.push(m[1].trim());
-    }
-    return head;
-  }
-
-  /**
-   * get column align info
-   * @param {string} input
-   * @return {Align[]} align list
-   */
-  private _getColumnAlign(input: string): Align[] {
-    const aligns = [];
-    let m: RegExpExecArray | null;
-    const regex = tableHeadPattern;
-    while ((m = regex.exec(input)) !== null) {
-      if (m.index === regex.lastIndex) {
-        regex.lastIndex++;
-      }
-      if (m[1].match(/^:-+$/)) {
-        aligns.push(Align.LEFT);
-      } else if (m[1].match(/^-+:$/)) {
-        aligns.push(Align.RIGHT);
-      } else if (m[1].match(/^:-+:$/)) {
-        aligns.push(Align.CENTER);
-      }
-    }
-    return aligns;
-  }
-
-  // eslint-disable-next-line valid-jsdoc
-  /**
-   * parse table body from strings
-   * @param {string[]} input
-   * @return {[string[][], number]}
-   *  table rows array and its count
-   */
-  private _parseTableBody(input: string[]): [string[][], number] {
-    let nowAt = 0;
-    const rows = [];
-    while (this._isTableBlockStart(input[nowAt])) {
-      rows.push(this._getTableColumnName(input[nowAt++].substr(1)));
-    }
-    return [rows, nowAt];
-  }
-
-  /**
-   * parse one line string and replace link and img
-   * @private
-   * @param {string} input [input value]
-   * @return {string} [parsed_text]
-   */
-  private _inlineParse(input: string): string {
-    const _imagePattern = /!\[(.*?)\]\((.*?)\)/g;
-    const _imageTemplate = `<img class="flav-md-img" src="$2" alt="$1">`;
-    const _linkPattern = /\[(.*?)\]\((.*?)\)/g;
-    const _linkTemplate = `<a class="flav-md-a" href="$2" alt="$1">$1</a>`;
-    const _codePattern = /`(.*?)`/g;
-    const _codeTemplate = `<code class="flav-md-code-inline">$1</code>`;
-    const _strongPattern = /\*{2}(.*?)\*{2}/g;
-    const _strongTemplate = `<strong class="flav-md-strong">$1</strong>`;
-    const _emPattern = /\*(.*?)\*/g;
-    const _emTemplate = `<em class="flav-md-em">${_escapeCodeString('$1')}</em>`;
-    const _input = input;
-    return _input
-      .replace(_imagePattern, _imageTemplate)
-      .replace(_linkPattern, _linkTemplate)
-      .replace(_codePattern, _codeTemplate)
-      .replace(_strongPattern, _strongTemplate)
-      .replace(_emPattern, _emTemplate);
   }
 }

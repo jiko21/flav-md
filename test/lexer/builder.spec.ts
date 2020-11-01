@@ -27,7 +27,7 @@ describe('Lexer.class', () => {
               {
                 tag: 'li',
                 content:
-                  'this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
+                  'this is <a class="flav-md-a" href="https://example.com" alt="Google先生">Google先生</a>',
               },
               {
                 tag: 'li',
@@ -89,12 +89,12 @@ describe('Lexer.class', () => {
     {
       tag: 'p' as Token,
       content:
-        'this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a>',
+        'this is <a class="flav-md-a" href="https://example.com" alt="Google先生">Google先生</a>',
     },
     {
       tag: 'p' as Token,
       content:
-        '画像 <img class="flav-md-img" src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル">',
+        '画像 <img class="flav-md-img" src="https://example.com" alt="エビフライトライアングル">',
     },
     {
       tag: 'blockquote',
@@ -160,13 +160,12 @@ describe('Lexer.class', () => {
         body: [
           ['aaa1', 'bbb1', 'ccc1'],
           ['aaa2', 'bbb2', 'ccc2'],
-        ]
-      }
+        ],
+      },
     },
     {
       tag: 'p' as Token,
-      content:
-        'aaa',
+      content: 'aaa',
     },
   ] as ElementNode[];
   let mdNode: MdNode;
@@ -180,7 +179,7 @@ describe('Lexer.class', () => {
   <li class="flav-md-text flav-md-li">hogehoge</li>
   <li class="flav-md-text flav-md-li">hogehoge1
     <ul class="flav-md-ul">
-      <li class="flav-md-text flav-md-li">this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a></li>
+      <li class="flav-md-text flav-md-li">this is <a class="flav-md-a" href="https://example.com" alt="Google先生">Google先生</a></li>
       <li class="flav-md-text flav-md-li">hogehoge3
         <ul class="flav-md-ul">
           <li class="flav-md-text flav-md-li">hoge 4</li>
@@ -203,8 +202,8 @@ describe('Lexer.class', () => {
     </ol>
   </li>
 </ol>
-<p class="flav-md-text flav-md-p">this is <a class="flav-md-a" href="https://www.google.co.jp/" alt="Google先生">Google先生</a></p>
-<p class="flav-md-text flav-md-p">画像 <img class="flav-md-img" src="http://i.imgur.com/Jjwsc.jpg" alt="エビフライトライアングル"></p>
+<p class="flav-md-text flav-md-p">this is <a class="flav-md-a" href="https://example.com" alt="Google先生">Google先生</a></p>
+<p class="flav-md-text flav-md-p">画像 <img class="flav-md-img" src="https://example.com" alt="エビフライトライアングル"></p>
 <blockquote class="flav-md-text flav-md-blockquote">
   <p class="flav-md-text flav-md-p">aaa</p>
   <p class="flav-md-text flav-md-p">bbb</p>
