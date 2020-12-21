@@ -1,0 +1,40 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+    paths:
+      - package.json
+      - src/**
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  release:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RELEASE_IT_VERSION: 14.2.1
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+      - run: npm run build
+      - name: git configuration
+        run: |
+          git config --global user.name github-release-action
+          git config --global user.email github-release-action@example.com
+      - name: patch release
+        run: npx release-it@${RELEASE_IT_VERSION} -- patch --ci
