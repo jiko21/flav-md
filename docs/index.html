@@ -49,8 +49,8 @@
               <pre class="terminal"><code class="language-javascript code-block">const flavmd = require('flav-md');
 const result = flavmd
   .createFlavMd()
-  .readMdFile('example.md')
-  .readCssFile('example.css')
+  .readMdText('# hogehoge')
+  .readCssText('.flav-md-h1 {color: red;}')
   .build();</code></pre>
             </p>
           </article>
