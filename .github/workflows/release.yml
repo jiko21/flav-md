@@ -38,5 +38,3 @@ jobs:
           git config --global user.email github-release-action@example.com
       - name: patch release
         run: npx release-it@${RELEASE_IT_VERSION} -- patch --ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
