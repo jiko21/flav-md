@@ -1,6 +1,6 @@
 import { _escapeCodeString } from '../../util/string-util';
 
-const codeBlockParenPattern = /^```$/;
+const codeBlockParenPattern = /^```[^`|.]*$/;
 
 /**
  * test line is code block paren

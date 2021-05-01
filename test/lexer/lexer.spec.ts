@@ -24,7 +24,7 @@ describe('Lexer.class', () => {
     'ddd',
     '',
     '## world',
-    '```',
+    '```html',
     '<script src="hoge.js"></script>',
     '<script src="hoge.js"></script>',
     '```',
