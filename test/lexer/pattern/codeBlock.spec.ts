@@ -7,6 +7,11 @@ describe('isCodeBlockStart', () => {
     expect(isCodeBlockStart(input)).toBe(true);
   });
 
+  it('should return true when input is ```<langname>', () => {
+    const input = '```html';
+    expect(isCodeBlockStart(input)).toBe(true);
+  });
+
   it('should return true when input is ``', () => {
     const input = '``';
     expect(isCodeBlockStart(input)).toBe(false);
