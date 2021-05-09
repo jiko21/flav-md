@@ -7,7 +7,7 @@
     "extends": [
         "google",
         "plugin:prettier/recommended",
-        "prettier/@typescript-eslint"
+        "prettier"
     ],
     "globals": {
         "Atomics": "readonly",
