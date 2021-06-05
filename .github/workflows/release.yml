@@ -32,6 +32,9 @@ jobs:
       - run: npm test
       - run: npm run lint
       - run: npm run build
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
       - name: git configuration
         run: |
           git config --global user.name github-release-action
