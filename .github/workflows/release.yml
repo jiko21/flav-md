@@ -36,5 +36,15 @@ jobs:
         run: |
           git config --global user.name github-release-action
           git config --global user.email github-release-action@example.com
+      - name: Major release
+        id: major
+        if: contains(toJSON(github.event.commits.*.message), 'bump up version major')
+        run: npx release-it@${RELEASE_IT_VERSION} -- major --ci
+          - name: minor release
+        id: minor
+        if: steps.major.conclusion == 'skipped' && contains(toJSON(github.event.commits.*.message), 'bump up version minor')
+        run: npx release-it@${RELEASE_IT_VERSION} -- minor --ci
       - name: patch release
+        id: patch
+        if: "!(steps.major.conclusion == 'success' || steps.minor.conclusion == 'success')"
         run: npx release-it@${RELEASE_IT_VERSION} -- patch --ci
