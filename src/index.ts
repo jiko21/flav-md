@@ -1,4 +1,4 @@
-/*!
+/* !
  * MIT License
 
  * Copyright (c) 2020 Jiko21 (a.k.a Daiki Kojima)
