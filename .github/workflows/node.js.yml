@@ -17,10 +17,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Use bun for installing package
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+    - run: bun install --yarn
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn install
     - run: yarn test
     - run: yarn lint
