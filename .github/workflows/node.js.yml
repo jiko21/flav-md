@@ -16,7 +16,7 @@ jobs:
         node-version: [18.x, 20.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use bun for installing package
       uses: oven-sh/setup-bun@v1
       with:
