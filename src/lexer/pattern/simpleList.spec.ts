@@ -1,4 +1,4 @@
-import { isList } from '../../../src/lexer/pattern/simpleList';
+import { isList } from './simpleList';
 
 describe('isList', () => {
   test('should return true when format is list `*` (nest 0)', () => {

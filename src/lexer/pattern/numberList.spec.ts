@@ -1,4 +1,4 @@
-import { isNumberList } from '../../../src/lexer/pattern/numberList';
+import { isNumberList } from './numberList';
 
 describe('isNumberList', () => {
   test('should return true when format is list `1.` (nest 0)', () => {

@@ -1,5 +1,5 @@
-import { MdNode } from '../../src/lexer/builder';
-import { ElementNode, Lexer, Token } from '../../src/lexer/lexer';
+import { MdNode } from './builder';
+import { ElementNode, Lexer, Token } from './lexer';
 
 describe('Lexer.class', () => {
   const text = [

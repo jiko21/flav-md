@@ -1,4 +1,4 @@
-import { isTableBlockStart, parseTable } from '../../../src/lexer/pattern/table';
+import { isTableBlockStart, parseTable } from './table';
 
 describe('isTableBlockStart', () => {
   it('should return true when input is table start', () => {

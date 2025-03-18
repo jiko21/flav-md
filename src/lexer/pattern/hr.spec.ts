@@ -1,4 +1,4 @@
-import { isHr } from "../../../src/lexer/pattern/hr";
+import { isHr } from "./hr";
 
 describe('isHr', () => {
   it('should return true when input is hr', () => {
