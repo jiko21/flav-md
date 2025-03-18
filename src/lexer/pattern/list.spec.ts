@@ -1,8 +1,8 @@
-import { parseList } from '../../../src/lexer/pattern/list';
-import * as inline from '../../../src/lexer/pattern/inline';
-import { Token } from '../../../src/lexer/lexer';
-import { simpleListPattern } from '../../../src/lexer/pattern/simpleList';
-import { numberListPattern } from '../../../src/lexer/pattern/numberList';
+import { Token } from '../lexer';
+import * as inline from './inline';
+import { parseList } from './list';
+import { numberListPattern } from './numberList';
+import { simpleListPattern } from './simpleList';
 
 describe('parseList', () => {
   beforeEach(() => {

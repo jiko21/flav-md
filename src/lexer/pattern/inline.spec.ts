@@ -1,4 +1,4 @@
-import { inlineParse } from '../../../src/lexer/pattern/inline';
+import { inlineParse } from './inline';
 
 describe('inlineParse', () => {
   test('should correctly parse image pattern', () => {

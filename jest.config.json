@@ -12,7 +12,7 @@
     }
   },
   "testMatch": [
-    "**/test/**/*.spec.ts"
+    "**/src/**/*.spec.ts"
   ],
   "moduleDirectories": [
     "node_modules",

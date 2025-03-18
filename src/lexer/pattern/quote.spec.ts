@@ -1,4 +1,4 @@
-import { encloseQuote, isQuoteBlock } from '../../../src/lexer/pattern/quote';
+import { encloseQuote, isQuoteBlock } from './quote';
 
 describe('quote', () => {
   it('should return true when input is block', () => {

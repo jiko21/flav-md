@@ -1,5 +1,5 @@
-import { isCodeBlockStart, parseCodeBlock } from '../../../src/lexer/pattern/codeBlock';
-import * as stringUtil from '../../../src/util/string-util';
+import * as stringUtil from '../../util/string-util';
+import { isCodeBlockStart, parseCodeBlock } from './codeBlock';
 
 describe('isCodeBlockStart', () => {
   it('should return true when input is ```', () => {
