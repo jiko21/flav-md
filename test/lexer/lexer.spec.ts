@@ -1,5 +1,5 @@
-import { ElementNode, Lexer, Token } from '../../src/lexer/lexer';
 import { MdNode } from '../../src/lexer/builder';
+import { ElementNode, Lexer, Token } from '../../src/lexer/lexer';
 
 describe('Lexer.class', () => {
   const text = [
@@ -36,6 +36,7 @@ describe('Lexer.class', () => {
     '|:----:|-----:|:----- |',
     '|  aaa1  | bbb1 | ccc1|',
     '|  aaa2 | bbb2 | ccc2|',
+    '--- ',
     'aaa',
   ];
   let lexer: Lexer;
@@ -212,6 +213,9 @@ describe('Lexer.class', () => {
             ['aaa2', 'bbb2', 'ccc2'],
           ],
         },
+      },
+      {
+        tag: 'hr' as Token,
       },
       {
         tag: 'p' as Token,
