@@ -1,11 +1,12 @@
 import { MdNode } from './builder';
+import { isCodeBlockStart, parseCodeBlock } from './pattern/codeBlock';
+import { isHr } from './pattern/hr';
 import { inlineParse } from './pattern/inline';
 import { parseList } from './pattern/list';
-import { isList, simpleListPattern } from './pattern/simpleList';
 import { isNumberList, numberListPattern } from './pattern/numberList';
-import { isTableBlockStart, parseTable, Table } from './pattern/table';
-import { isCodeBlockStart, parseCodeBlock } from './pattern/codeBlock';
 import { encloseQuote, isQuoteBlock } from './pattern/quote';
+import { isList, simpleListPattern } from './pattern/simpleList';
+import { isTableBlockStart, parseTable, Table } from './pattern/table';
 export type Token =
   | 'h1'
   | 'h2'
@@ -19,7 +20,8 @@ export type Token =
   | 'li'
   | 'blockquote'
   | 'code'
-  | 'table';
+  | 'table'
+  | 'hr';
 
 namespace Token {
   /**
@@ -35,7 +37,7 @@ namespace Token {
 
 export type ElementNode = {
   tag: Token;
-  content: string | ElementNode | ElementNode[] | Table;
+  content?: string | ElementNode | ElementNode[] | Table;
   children?: undefined | ElementNode;
 };
 
@@ -105,14 +107,20 @@ export class Lexer {
         continue;
       } else if (isTableBlockStart(input[i])) {
         const [table, skip] = parseTable(input.slice(i));
-        i += skip;
+        i += skip - 1;
         rsltStr.push({
           tag: 'table',
           content: table,
         });
+        continue;
+      } else if (isHr(input[i])) {
+        rsltStr.push({
+          tag: 'hr',
+        });
+        continue;
+      } else {
+        rsltStr.push(this._parseLine(input[i]));
       }
-      // normal text <h\d> or <p>
-      rsltStr.push(this._parseLine(input[i]));
     }
     return rsltStr;
   }
