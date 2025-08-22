@@ -1,36 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>flav-md</title>
+    <title>flav-md | Markdown Parser with CSS Classes</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A lightweight Markdown parser that converts Markdown to HTML with automatic CSS class generation">
+    <meta name="keywords" content="markdown, parser, css, html, javascript, typescript, npm">
     <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/monokai-sublime.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>  </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/monokai-sublime.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
   <body>
     <header>
-      <img class="header-logo" src="./logo.png" />
-      <p>markdown parser with css style</p>
-      <div class="budge-list">
+      <img class="header-logo" src="./logo.png" alt="flav-md logo" />
+      <h1>flav-md</h1>
+      <p>A lightweight Markdown parser with automatic CSS class generation</p>
+      <div class="badge-list">
         <a href="https://badge.fury.io/gh/jiko21%2Fflav-md"><img src="https://badge.fury.io/gh/jiko21%2Fflav-md.svg" alt="GitHub version" height="18"></a>
         <a href="https://badge.fury.io/js/flav-md"><img src="https://badge.fury.io/js/flav-md.svg" alt="npm version" height="18"></a>
+        <a href="https://github.com/jiko21/flav-md/actions"><img src="https://github.com/jiko21/flav-md/workflows/Node.js%20CI/badge.svg" alt="CI Status"></a>
       </div>
     </header>
     <main>
     <section>
-      <acticle>
+      <article>
         <h2>What's flav-md?</h2>
         <div>
           <p>
-            Flav-md is an open source library for parsing markdown docs to html with css.
-            When parsing <code>md</code> files with flav-md,
-            html tags in genrated documents have html element class for flav-md;
-            flav-h1, flav-text, etc.
-            Only you have to do is write markdown docs and CSS file for generated htmls.
+            flav-md is a lightweight and flexible Markdown parser that converts Markdown to HTML with automatic CSS class generation. 
+            When parsing <code>md</code> files with flav-md, HTML tags in generated documents automatically receive semantic CSS classes 
+            like <code>flav-md-h1</code>, <code>flav-md-text</code>, <code>flav-md-p</code>, etc.
           </p>
+          <p>
+            This makes styling incredibly easy - you just write Markdown content and CSS styles, and flav-md handles the rest!
+          </p>
+          <h3>Key Features</h3>
+          <ul>
+            <li>🚀 <strong>Lightweight</strong> - Minimal dependencies and fast parsing</li>
+            <li>🎨 <strong>CSS-Ready</strong> - Automatic CSS class generation for all elements</li>
+            <li>📝 <strong>Full Markdown Support</strong> - Headers, lists, links, images, code blocks, tables, and more</li>
+            <li>🔧 <strong>Easy Integration</strong> - Works with Node.js, ES6, and TypeScript</li>
+          </ul>
         </div>
-      </acticle>
-      <acticle>
+      </article>
+      <article>
         <h2>How to install?</h2>
         <div>
           <p>
@@ -38,8 +52,8 @@
             <pre class="terminal"><code class="language-javascript code-block">$ npm install flav-md</code></pre>
           </p>
         </div>
-      </acticle>
-      <acticle>
+      </article>
+      <article>
         <h2>How to use?</h2>
         <div>
           You can use flav-md in Node.js (ES5), ES6, and alos, TypeScript.
@@ -66,15 +80,25 @@ const result = createFlavMd()
             </p>
           </article>
         </div>
-      </acticle>
+      </article>
       <article>
-        <h3>More info</h3>
-        <p>You can show & contribute flav-md in <a href="https://github.com/jiko21/flav-md">GitHub</a>.</p>
-        </article>
+        <h2>Documentation & Resources</h2>
+        <div>
+          <ul>
+            <li><strong><a href="https://github.com/jiko21/flav-md">GitHub Repository</a></strong> - Source code and contributions</li>
+            <li><strong><a href="https://github.com/jiko21/flav-md/blob/master/CSS-Class-Wiki.md">CSS Class Reference</a></strong> - Complete guide to all CSS classes</li>
+            <li><strong><a href="https://www.npmjs.com/package/flav-md">NPM Package</a></strong> - Official package page</li>
+            <li><strong><a href="https://github.com/jiko21/flav-md/tree/master/examples">Examples</a></strong> - Sample code and usage</li>
+          </ul>
+          <p>
+            Contributions are welcome! Feel free to submit issues, feature requests, or pull requests on GitHub.
+          </p>
+        </div>
+      </article>
     </section>
     </main>
     <footer>
-      © 2020&nbsp;<a href="https://github.com/jiko21"> jiko21</a>
+      <p>© 2020-2025 <a href="https://github.com/jiko21">jiko21</a> | <a href="https://github.com/jiko21/flav-md/blob/master/LICENSE">MIT License</a></p>
     </footer>
   </body>
 </html>
