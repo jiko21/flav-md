@@ -40,7 +40,7 @@ export class MdNode {
           item.content as ElementNode[],
           indent + 2,
         )}${' '.repeat(indent)}</ol>`;
-      case 'li':
+      case 'li': {
         let children = '';
         if (item.children !== undefined) {
           children = ' '.repeat(indent + 2) + this.createTag(item.children, indent + 2);
@@ -53,6 +53,7 @@ export class MdNode {
         } else {
           return ' '.repeat(indent) + `<li class="flav-md-text flav-md-li">${item.content}</li>`;
         }
+      }
       case 'blockquote':
         return `${' '.repeat(indent)}<blockquote class="${classes.join(
           ' ',

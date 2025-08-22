@@ -23,7 +23,7 @@ export type Token =
   | 'table'
   | 'hr';
 
-namespace Token {
+namespace TokenUtil {
   /**
    * Create a lexer.
    * @param {number} count input text
@@ -141,7 +141,7 @@ export class Lexer {
       }
     }
     return {
-      tag: Token.valueOf(sharpCount),
+      tag: TokenUtil.valueOf(sharpCount),
       content: inlineParse(input.substring(sharpCount === 0 ? sharpCount : sharpCount + 1)),
     };
   }
