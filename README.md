@@ -1,6 +1,6 @@
 ![flavmd-logo](./docs/logo.png)
 # flav-md
-![Node.js CI](https://github.com/jiko21/flav-md/workflows/Node.js%20CI/badge.svg)
+![Bun CI](https://github.com/jiko21/flav-md/workflows/Bun%20CI/badge.svg)
 
 markdown parser with css style
 
