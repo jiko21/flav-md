@@ -1,6 +1,6 @@
 ![flavmd-logo](./docs/logo.png)
 # flav-md
-![Node.js CI](https://github.com/jiko21/flav-md/workflows/Node.js%20CI/badge.svg)
+![Bun CI](https://github.com/jiko21/flav-md/workflows/Bun%20CI/badge.svg)
 
 markdown parser with css style
 
@@ -30,47 +30,42 @@ You can install via npm with
 npm install flav-md
 ```
 
-### import flav-md
-#### load from file
+### Basic Usage
 
 CommonJS
 ```js
-const flavmd = require('flav-md');
-const result = flavmd
-  .createFlavMd()
-  .readMdFile('example.md')
-  .readCssFile('example.css')
+const { createFlavMd } = require('flav-md');
+
+const result = createFlavMd()
+  .readMdText('# Hello World')
+  .readCssText('.flav-md-h1 { color: red; }')
   .build();
 ```
 
 ES6 or TypeScript
 ```ts
-import {createFlavMd} from 'flav-md';
+import { createFlavMd } from 'flav-md';
 
 const result = createFlavMd()
-  .readMdFile('example.md')
-  .readCssFile('example.css')
+  .readMdText('# Hello World')
+  .readCssText('.flav-md-h1 { color: red; }')
   .build();
 ```
 
-#### load from text
-CommonJS
-```js
-const flavmd = require('flav-md');
-const result = flavmd
-  .createFlavMd()
-  .readMdText('# hogehoge')
-  .readCssText('.flav-md-h1 {color: red;}')
-  .build();
-```
+### Working with Files
 
-ES6 or TypeScript
+If you need to read from files, use Node.js file system utilities:
+
 ```ts
-import {createFlavMd} from 'flav-md';
+import { readFileSync } from 'fs';
+import { createFlavMd } from 'flav-md';
+
+const markdownContent = readFileSync('example.md', 'utf-8');
+const cssContent = readFileSync('example.css', 'utf-8');
 
 const result = createFlavMd()
-  .readMdText('# hogehoge')
-  .readCssText('.flav-md-h1 {color: red;}')
+  .readMdText(markdownContent)
+  .readCssText(cssContent)
   .build();
 ```
 
@@ -96,32 +91,18 @@ Creates a new FlavMd instance.
 const flavmd = createFlavMd();
 ```
 
-#### `.readMdFile(filePath: string)`
-Reads Markdown content from a file.
-
-```typescript
-flavmd.readMdFile('example.md');
-```
-
 #### `.readMdText(mdText: string)`
-Reads Markdown content from a string.
+Reads Markdown content from a string and parses it to HTML.
 
 ```typescript
-flavmd.readMdText('# Hello World');
-```
-
-#### `.readCssFile(filePath: string)`
-Reads CSS content from a file.
-
-```typescript
-flavmd.readCssFile('styles.css');
+flavmd.readMdText('# Hello World\n\nThis is **bold** text.');
 ```
 
 #### `.readCssText(cssText: string)`
-Reads CSS content from a string.
+Reads CSS content from a string to be embedded in the final HTML.
 
 ```typescript
-flavmd.readCssText('.flav-md-h1 { color: blue; }');
+flavmd.readCssText('.flav-md-h1 { color: blue; font-size: 2em; }');
 ```
 
 #### `.build()`

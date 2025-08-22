@@ -19,7 +19,7 @@
       <div class="badge-list">
         <a href="https://badge.fury.io/gh/jiko21%2Fflav-md"><img src="https://badge.fury.io/gh/jiko21%2Fflav-md.svg" alt="GitHub version" height="18"></a>
         <a href="https://badge.fury.io/js/flav-md"><img src="https://badge.fury.io/js/flav-md.svg" alt="npm version" height="18"></a>
-        <a href="https://github.com/jiko21/flav-md/actions"><img src="https://github.com/jiko21/flav-md/workflows/Node.js%20CI/badge.svg" alt="CI Status"></a>
+        <a href="https://github.com/jiko21/flav-md/actions"><img src="https://github.com/jiko21/flav-md/workflows/Bun%20CI/badge.svg" alt="Bun CI Status"></a>
       </div>
     </header>
     <main>
@@ -56,15 +56,15 @@
       <article>
         <h2>How to use?</h2>
         <div>
-          You can use flav-md in Node.js (ES5), ES6, and alos, TypeScript.
+          You can use flav-md in Node.js (CommonJS), ES6 modules, and TypeScript.
           <article>
-            <h3>Node.js (ES5)</h3>
+            <h3>CommonJS</h3>
             <p>
-              <pre class="terminal"><code class="language-javascript code-block">const flavmd = require('flav-md');
-const result = flavmd
-  .createFlavMd()
-  .readMdText('# hogehoge')
-  .readCssText('.flav-md-h1 {color: red;}')
+              <pre class="terminal"><code class="language-javascript code-block">const { createFlavMd } = require('flav-md');
+
+const result = createFlavMd()
+  .readMdText('# Hello World')
+  .readCssText('.flav-md-h1 { color: red; }')
   .build();</code></pre>
             </p>
           </article>
@@ -74,8 +74,26 @@ const result = flavmd
               <pre class="terminal"><code class="language-javascript code-block">import { createFlavMd } from 'flav-md';
 
 const result = createFlavMd()
-  .readMdText('# hogehoge')
-  .readCssText('.flav-md-h1 {color: red;}')
+  .readMdText('# Hello World')
+  .readCssText('.flav-md-h1 { color: red; }')
+  .build();</code></pre>
+            </p>
+          </article>
+          <article>
+            <h3>Working with Files</h3>
+            <p>
+              For file operations, use Node.js file system utilities:
+            </p>
+            <p>
+              <pre class="terminal"><code class="language-javascript code-block">import { readFileSync } from 'fs';
+import { createFlavMd } from 'flav-md';
+
+const markdownContent = readFileSync('example.md', 'utf-8');
+const cssContent = readFileSync('example.css', 'utf-8');
+
+const result = createFlavMd()
+  .readMdText(markdownContent)
+  .readCssText(cssContent)
   .build();</code></pre>
             </p>
           </article>

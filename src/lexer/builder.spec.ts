@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'bun:test';
 import { MdNode } from './builder';
 import { ElementNode, Token } from './lexer';
 
@@ -168,11 +169,9 @@ describe('Lexer.class', () => {
       content: 'aaa',
     },
   ] as ElementNode[];
-  let mdNode: MdNode;
-  beforeAll(() => {
-    mdNode = new MdNode(text);
-  });
+
   it('should correctly parse file', () => {
+    const mdNode = new MdNode(text);
     const expected = `<h1 class="flav-md-text flav-md-h1 flav-md-h">hello</h1>
 <h2 class="flav-md-text flav-md-h2 flav-md-h">world</h2>
 <ul class="flav-md-ul">

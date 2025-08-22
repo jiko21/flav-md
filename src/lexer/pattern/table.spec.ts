@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'bun:test';
 import { isTableBlockStart, parseTable } from './table';
 
 describe('isTableBlockStart', () => {

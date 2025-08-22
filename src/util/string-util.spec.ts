@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'bun:test';
 import { _splitString, _escapeCodeString } from '../../src/util/string-util';
 
 describe('_splitString', () => {
