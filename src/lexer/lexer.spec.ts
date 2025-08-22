@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll } from 'bun:test';
 import { MdNode } from './builder';
 import { ElementNode, Lexer, Token } from './lexer';
 
@@ -39,11 +40,9 @@ describe('Lexer.class', () => {
     '--- ',
     'aaa',
   ];
-  let lexer: Lexer;
-  beforeAll(() => {
-    lexer = new Lexer(text);
-  });
+  
   it('should correctly parse file', () => {
+    const lexer = new Lexer(text);
     const rsltNodes: ElementNode[] = [
       {
         tag: 'h1' as Token,

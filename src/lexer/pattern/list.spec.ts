@@ -1,3 +1,4 @@
+import { describe, it, expect, test, beforeEach, afterEach, spyOn } from 'bun:test';
 import { Token } from '../lexer';
 import * as inline from './inline';
 import { parseList } from './list';
@@ -5,12 +6,14 @@ import { numberListPattern } from './numberList';
 import { simpleListPattern } from './simpleList';
 
 describe('parseList', () => {
+  let inlineParseMock: any;
+  
   beforeEach(() => {
-    jest.spyOn(inline, 'inlineParse').mockImplementation((x) => x);
+    inlineParseMock = spyOn(inline, 'inlineParse').mockImplementation((x) => x);
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    inlineParseMock.mockRestore();
   });
 
   test('should correctly parse simple list', () => {

@@ -1,3 +1,4 @@
+import { describe, it, expect, test } from 'bun:test';
 import { isNumberList } from './numberList';
 
 describe('isNumberList', () => {

@@ -1,3 +1,4 @@
+import { describe, it, expect, test } from 'bun:test';
 import { inlineParse } from './inline';
 
 describe('inlineParse', () => {

@@ -1,3 +1,4 @@
+import { describe, it, expect, afterEach, spyOn } from 'bun:test';
 import * as stringUtil from '../../util/string-util';
 import { isCodeBlockStart, parseCodeBlock } from './codeBlock';
 
@@ -24,16 +25,12 @@ describe('isCodeBlockStart', () => {
 });
 
 describe('parseCodeBlock', () => {
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
   it('should correctly call _escapeCodeString for escaping javascript', () => {
-    const escapeCodeStringMock = jest
-      .spyOn(stringUtil, '_escapeCodeString')
-      .mockImplementation((x) => x);
+    const escapeCodeStringMock = spyOn(stringUtil, '_escapeCodeString').mockImplementation((x) => x);
     const input = ['a', 'b', 'c'];
     parseCodeBlock(input);
-    expect(escapeCodeStringMock).toBeCalledTimes(3);
+    expect(escapeCodeStringMock).toHaveBeenCalledTimes(3);
+    escapeCodeStringMock.mockRestore();
   });
 
   it('should correctly parse javascript code', () => {
